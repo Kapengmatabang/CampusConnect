@@ -1,0 +1,121 @@
+
+body{
+    margin: 2%;
+    background-color: #2c3136;
+}
+.container{
+    width: 45%;
+    background-color: white;
+    border: 1px solid rgb(235, 235, 235);
+    border-radius: 8px;
+    margin: 0;
+    padding: 0;
+    box-shadow: 0 3px 5px 0 rgba(240, 240, 240, 0.3);
+    animation: transitionIn-Y-over 0.5s;
+
+}
+td{
+    text-align: center;
+
+}
+.header-text{
+    font-weight: 600;
+    font-size: 30px;
+    letter-spacing: -1px;
+    margin-bottom: 10px;
+}
+
+.sub-text{
+    font-size: 15px;
+    color: rgb(138, 138, 138);
+}
+
+.form-label{
+    color: rgb(44, 44, 44);
+    text-align: left;
+    font-size: 14px;
+}
+.label-td{
+    text-align: left;
+    padding-top: 10px;
+}
+
+.hover-link1{
+    font-weight: bold;
+}
+
+
+.hover-link1:hover{
+    opacity: 0.8;
+    transition: 0.5s;
+
+
+}.login-btn{
+    margin-top: 15px;
+    margin-bottom: 15px;
+    width: 100%;
+}
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #2f3a40; /* same dark bg */
+}
+
+.main-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.card {
+    background: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    width: 350px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    text-align: center;
+}
+
+.card h2 {
+    margin-bottom: 5px;
+}
+
+.sub {
+    color: gray;
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+input, select {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    background: green;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:hover {
+    background: darkgreen;
+}
+
+.error {
+    color: red;
+    font-size: 14px;
+}
+
+.link {
+    margin-top: 15px;
+    font-size: 14px;
+}

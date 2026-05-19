@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PLMUN Organization Recruitment</title>
+
+<link rel="icon" type="image/png" href="img/favicon.png">
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+    color: white;
+    background: #0f172a;
+}
+
+/* HERO */
+.hero {
+    height: 100vh;
+    background:
+        linear-gradient(135deg, rgba(10,92,10,0.7), rgba(0,0,0,0.8)),
+        url('img/bg.jpg') no-repeat center/cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: relative;
+}
+
+.logo-container {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+}
+.logo-container img {
+    height: 80px;
+}
+
+/* TEXT */
+.heading-text {
+    font-size: 52px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    animation: fadeUp 1s ease;
+}
+
+.sub-text {
+    font-size: 20px;
+    margin-bottom: 30px;
+    opacity: 0.9;
+    animation: fadeUp 1.3s ease;
+}
+
+/* BUTTONS */
+.btn-group {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.login-btn {
+    padding: 12px 28px;
+    border-radius: 30px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+    backdrop-filter: blur(10px);
+    background: rgba(255,255,255,0.15);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.3);
+}
+
+.login-btn:hover {
+    transform: translateY(-3px);
+    background: rgba(255,255,255,0.25);
+}
+
+.login-btn.outline {
+    background: transparent;
+}
+
+/* NEWS FEED */
+.timeline-section {
+    padding: 60px 20px;
+    background: linear-gradient(to bottom, #0f172a, #1e293b);
+}
+
+.timeline-section h2 {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.timeline {
+    max-width: 900px;
+    margin: auto;
+}
+
+/* 🔥 ULTRA COMPACT CARD */
+.timeline-item {
+    background: rgba(255,255,255,0.07);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: white;
+
+    padding: 8px;          /* 🔥 smaller */
+    border-radius: 10px;
+    margin-bottom: 10px;   /* 🔥 tighter spacing */
+
+    transition: 0.2s;
+    animation: fadeUp 0.3s ease;
+}
+
+.timeline-item:hover {
+    transform: translateY(-2px);
+}
+
+/* 🔥 SMALLER TEXT */
+.timeline-item h4 {
+    font-size: 14px;
+    margin: 2px 0;
+}
+
+.timeline-item p {
+    font-size: 12px;
+    margin-top: 3px;
+    color: #ccc;
+}
+
+.post-date {
+    font-size: 10px;
+    margin-top: 4px;
+}
+
+/* 🔥 IMAGE (FULL + CLEAN) */
+.timeline-item img {
+    width: 100%;
+    margin-top: 6px;
+    border-radius: 8px;
+
+    height: auto;
+    object-fit: contain;
+
+    background: #000;
+}
+
+/* 🔥 TAGS SMALLER */
+.tag {
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 12px;
+}
+
+/* FOOTER */
+.footer {
+    background: #020617;
+    text-align: center;
+    padding: 15px;
+    font-size: 14px;
+    color: #aaa;
+}
+
+/* ANIMATION */
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- HERO -->
+<div class="hero">
+    <div class="logo-container">
+        <img src="img/cclogo.png" class="logo-img">
+    </div>
+
+    <div>
+        <div class="heading-text">Find Your Community</div>
+        <div class="sub-text">Join. Apply. Get Involved.</div>
+
+        <div class="btn-group">
+            <a href="login.php"><button class="login-btn">Login</button></a>
+            <a href="signup.php"><button class="login-btn outline">Sign Up</button></a>
+        </div>
+    </div>
+</div>
+
+<!-- NEWS FEED -->
+<div class="timeline-section">
+    <h2>📢 News Feed</h2>
+
+    <div class="timeline" id="feed">
+        <p style="text-align:center; color:#aaa;">Loading posts...</p>
+    </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+© 2026 PLMUN CampusConnect
+</div>
+
+<script>
+// LOAD POSTS
+function loadPosts(){
+    fetch("fetch_posts.php")
+    .then(res => res.text())
+    .then(data => {
+        if(data.trim() === ""){
+            document.getElementById("feed").innerHTML =
+                "<p style='text-align:center;'>No posts yet.</p>";
+        } else {
+            document.getElementById("feed").innerHTML = data;
+        }
+    })
+    .catch(() => {
+        document.getElementById("feed").innerHTML =
+            "<p style='text-align:center;color:red;'>Failed to load posts</p>";
+    });
+}
+
+// AUTO REFRESH
+loadPosts();
+setInterval(loadPosts, 5000);
+</script>
+
+</body>
+</html>
