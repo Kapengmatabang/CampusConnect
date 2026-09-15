@@ -16,7 +16,7 @@ $org_id     = $_POST['org_id'] ?? '';
 
 if ($org_id) {
 
-    // ✅ STEP 1: Verify student exists in DB
+    // STEP 1: Verify student exists in DB
     $verify = $conn->prepare("SELECT student_id FROM students WHERE student_id = ?");
     $verify->bind_param("s", $student_id);
     $verify->execute();
@@ -28,14 +28,14 @@ if ($org_id) {
         exit();
     }
 
-    // ✅ STEP 2: Prevent duplicate application
+    // STEP 2: Prevent duplicate application
     $check = $conn->prepare("SELECT 1 FROM applications WHERE student_id = ? AND org_id = ?");
     $check->bind_param("si", $student_id, $org_id);
     $check->execute();
 
     if ($check->get_result()->num_rows === 0) {
 
-        // ✅ STEP 3: Insert application
+        // STEP 3: Insert application
         $insert = $conn->prepare("INSERT INTO applications (student_id, org_id) VALUES (?, ?)");
         $insert->bind_param("si", $student_id, $org_id);
 

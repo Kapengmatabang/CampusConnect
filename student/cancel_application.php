@@ -15,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     $org_id = $_POST['org_id'] ?? '';
 
-    // ✅ Only allow cancel if status = Pending
+    // Only allow cancel if status = Pending
     $stmt = $conn->prepare("
         DELETE FROM applications 
         WHERE student_id=? AND org_id=? AND status='Pending'

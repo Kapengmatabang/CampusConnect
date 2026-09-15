@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-// ✅ PROTECT PAGE
+// PROTECT PAGE
 if (!isset($_SESSION["user"])) {
     header("Location: ../login.php");
     exit();
@@ -12,7 +12,7 @@ if ($conn->connect_error) die("DB Error");
 
 $student_id = $_SESSION["user"];
 
-// ✅ SAFE QUERY
+// SAFE QUERY
 $stmt = $conn->prepare("
     SELECT o.org_name, o.org_id, a.*
     FROM applications a
@@ -34,10 +34,10 @@ while ($a = $apps->fetch_assoc()) {
         <td class='$statusClass'>
             {$a['status']}";
 
-    // ✅ NOTIFICATION
+    // NOTIFICATION
     if (!empty($a['notification'])) {
         echo "<div style='color:green; font-size:12px; margin-top:5px;'>
-                🔔 {$a['notification']}
+                {$a['notification']}
               </div>";
     }
 
@@ -45,14 +45,14 @@ while ($a = $apps->fetch_assoc()) {
 
         <td>";
 
-    // ✅ INTERVIEW INFO ONLY
+    // INTERVIEW INFO ONLY
     if (!empty($a['interview_date'])) {
 
         echo "<span class='interview'>
-                📅 {$a['interview_date']}<br>";
+                {$a['interview_date']}<br>";
 
         if (!empty($a['interview_link'])) {
-            echo "🔗 <a href='{$a['interview_link']}' target='_blank'>Join Meeting</a>";
+            echo "<a href='{$a['interview_link']}' target='_blank'>Join Meeting</a>";
         }
 
         echo "</span>";
@@ -67,7 +67,7 @@ while ($a = $apps->fetch_assoc()) {
 
         <td>";
 
-    // ✅ ONLY CANCEL BUTTON
+    // ONLY CANCEL BUTTON
     if ($a['status'] == 'Pending') {
         echo "
         <form method='POST' action='cancel_application.php'

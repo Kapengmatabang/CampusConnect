@@ -11,16 +11,42 @@ if ($database->connect_error) {
 
 $error = "";
 
+// Only students with this institutional email domain may sign up
+$allowedDomain = "@plmun.edu.ph";
+
+// Keep whatever the student typed/picked so the form doesn't clear on error
+$old = [
+    'fullname'   => '',
+    'email'      => '',
+    'student_id' => '',
+    'course'     => '',
+    'year'       => '',
+    'section'    => '',
+    'age'        => '',
+];
+
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     $fullname   = trim($_POST['fullname'] ?? '');
     $email      = trim($_POST['email'] ?? '');
     $student_id = trim($_POST['student_id'] ?? '');
-    $course_in  = strtoupper(trim($_POST['course'] ?? ''));
+    $course     = strtoupper(trim($_POST['course'] ?? ''));
+    $year       = trim($_POST['year'] ?? '');
+    $section    = strtoupper(trim($_POST['section'] ?? ''));
     $age        = trim($_POST['age'] ?? '');
     $password   = trim($_POST['password'] ?? '');
 
-    if (empty($fullname) || empty($email) || empty($student_id) || empty($course_in) || empty($age) || empty($password)) {
+    $old = [
+        'fullname'   => $fullname,
+        'email'      => $email,
+        'student_id' => $student_id,
+        'course'     => $course,
+        'year'       => $year,
+        'section'    => $section,
+        'age'        => $age,
+    ];
+
+    if (empty($fullname) || empty($email) || empty($student_id) || empty($course) || empty($year) || empty($section) || empty($age) || empty($password)) {
         $error = "All fields are required.";
     }
     elseif (!preg_match("/^[0-9]{8}$/", $student_id)) {
@@ -29,55 +55,63 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $error = "Invalid email format.";
     }
+    elseif (!str_ends_with(strtolower($email), strtolower($allowedDomain))) {
+        $error = "You must sign up using your PLMUN institutional email ($allowedDomain).";
+    }
+    elseif (!preg_match("/^[A-Z]{2,10}$/", $course)) {
+        $error = "Course code should be letters only, e.g. BSIT.";
+    }
+    elseif (!in_array($year, ['1', '2', '3', '4'], true)) {
+        $error = "Please select a valid year (1-4).";
+    }
+    elseif (!preg_match("/^[A-Z]$/", $section)) {
+        $error = "Please select a valid section (A-Z).";
+    }
     else {
 
-        $parts = explode(" ", $course_in);
-        $course = $parts[0] ?? '';
-        $section = $parts[1] ?? '';
+        // Combine into the stored format, e.g. course="BSIT", section="3O"
+        $yearSection = $year . $section;
 
-        if (empty($course) || empty($section)) {
-            $error = "Use format: BSIT 3S";
+        $check = $database->prepare("SELECT student_id FROM students WHERE student_id=? OR email=?");
+        $check->bind_param("ss", $student_id, $email);
+        $check->execute();
+        $result = $check->get_result();
+
+        if ($result->num_rows > 0) {
+            $error = "Student already exists.";
         } else {
 
-            $check = $database->prepare("SELECT student_id FROM students WHERE student_id=? OR email=?");
-            $check->bind_param("ss", $student_id, $email);
-            $check->execute();
-            $result = $check->get_result();
+            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-            if ($result->num_rows > 0) {
-                $error = "Student already exists.";
+            // Email verification removed — accounts are now active immediately
+            // (is_verified = 1 right away, no verification_token needed).
+            $insert = $database->prepare("
+                INSERT INTO students
+                (student_id, full_name, email, course, section, age, password, is_verified)
+                VALUES (?, ?, ?, ?, ?, ?, ?, 1)
+            ");
+
+            $insert->bind_param("sssssis",
+                $student_id,
+                $fullname,
+                $email,
+                $course,
+                $yearSection,
+                $age,
+                $hashed_password
+            );
+
+            if ($insert->execute()) {
+                header("Location: login.php?registered=1");
+                exit();
             } else {
-
-                $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-
-                $insert = $database->prepare("
-                    INSERT INTO students
-                    (student_id, full_name, email, course, section, age, password)
-                    VALUES (?, ?, ?, ?, ?, ?, ?)
-                ");
-
-                $insert->bind_param("sssssis",
-                    $student_id,
-                    $fullname,
-                    $email,
-                    $course,
-                    $section,
-                    $age,
-                    $hashed_password
-                );
-
-                if ($insert->execute()) {
-                    header("Location: login.php?registered=1");
-                    exit();
-                } else {
-                    $error = "Insert failed.";
-                }
-
-                $insert->close();
+                $error = "Insert failed.";
             }
 
-            $check->close();
+            $insert->close();
         }
+
+        $check->close();
     }
 }
 ?>
@@ -88,138 +122,24 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <title>Sign Up</title>
 <link rel="icon" type="image/png" href="img/favicon.png">
 
-<style>
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
-body {
-    font-family: 'Segoe UI', sans-serif;
-    background: linear-gradient(135deg, #0f172a, #1e293b);
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: white;
-}
-
-/* LOGO */
-.logo-img {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    width: 140px;
-}
-
-/* GLASS CARD */
-.container {
-    width: 380px;
-    padding: 30px;
-    border-radius: 18px;
-    background: rgba(255,255,255,0.08);
-    backdrop-filter: blur(15px);
-    border: 1px solid rgba(255,255,255,0.15);
-    box-shadow: 0 10px 40px rgba(0,0,0,0.4);
-    animation: fadeUp 0.6s ease;
-}
-
-/* TITLE */
-h2 {
-    text-align: center;
-    margin-bottom: 10px;
-}
-
-.sub {
-    text-align: center;
-    font-size: 13px;
-    color: #aaa;
-    margin-bottom: 20px;
-}
-
-/* INPUTS */
-.input {
-    width: 100%;
-    padding: 12px;
-    margin: 8px 0;
-    border-radius: 10px;
-    border: 1px solid rgba(255,255,255,0.2);
-    background: rgba(255,255,255,0.05);
-    color: white;
-    outline: none;
-    transition: 0.3s;
-}
-
-.input:focus {
-    border-color: #22c55e;
-    background: rgba(255,255,255,0.1);
-}
-
-/* BUTTON */
-.btn {
-    width: 100%;
-    padding: 12px;
-    margin-top: 10px;
-    border-radius: 30px;
-    border: none;
-    background: linear-gradient(135deg, #22c55e, #16a34a);
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 20px rgba(34,197,94,0.4);
-}
-
-/* ERROR */
-.error {
-    background: #ef4444;
-    padding: 10px;
-    border-radius: 8px;
-    text-align: center;
-    margin-bottom: 10px;
-}
-
-/* LINK */
-.login-link {
-    text-align: center;
-    margin-top: 15px;
-    font-size: 13px;
-}
-
-.login-link a {
-    color: #22c55e;
-    text-decoration: none;
-}
-
-/* ANIMATION */
-@keyframes fadeUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-</style>
+<link rel="stylesheet" href="css/signup.css">
 </head>
 
 <body>
 
-<a href="index.html">
-<img src="img/cclogo.png" class="logo-img">
+<a href="index.html" class="back-btn">
+    <svg viewBox="0 0 24 24">
+        <path d="M15 18l-6-6 6-6"
+              stroke-linecap="round"
+              stroke-linejoin="round"/>
+    </svg>
+    Back
 </a>
 
 <div class="container">
 
 <h2>Create Account</h2>
-<p class="sub">Join CampusConnect</p>
+
 
 <?php if ($error): ?>
 <div class="error"><?= htmlspecialchars($error) ?></div>
@@ -227,11 +147,31 @@ h2 {
 
 <form method="POST">
 
-<input type="text" name="fullname" placeholder="Full Name" class="input" required>
-<input type="email" name="email" placeholder="Email" class="input" required>
-<input type="text" name="student_id" placeholder="Student ID (8 digits)" class="input" required>
-<input type="text" name="course" placeholder="BSIT 3S" class="input" required>
-<input type="number" name="age" placeholder="Age" class="input" required>
+<input type="text" name="fullname" placeholder="Full Name" class="input" value="<?= htmlspecialchars($old['fullname']) ?>" required>
+<input type="email" name="email" placeholder="Email" class="input" value="<?= htmlspecialchars($old['email']) ?>" required>
+<div class="hint">Use your Institional Email</div>
+<input type="text" name="student_id" placeholder="Student ID (8 digits)" class="input" value="<?= htmlspecialchars($old['student_id']) ?>" required>
+
+<div class="course-row">
+    <input type="text" name="course" placeholder="Course (e.g. BSIT)" class="input course-field" value="<?= htmlspecialchars($old['course']) ?>" required>
+
+    <select name="year" class="input year-field" required>
+        <option value="" disabled <?= $old['year'] === '' ? 'selected' : '' ?>>Year</option>
+        <?php for ($y = 1; $y <= 4; $y++): ?>
+            <option value="<?= $y ?>" <?= $old['year'] == $y ? 'selected' : '' ?>><?= $y ?></option>
+        <?php endfor; ?>
+    </select>
+
+    <select name="section" class="input section-field" required>
+        <option value="" disabled <?= $old['section'] === '' ? 'selected' : '' ?>>Sec</option>
+        <?php for ($s = 65; $s <= 90; $s++): $letter = chr($s); ?>
+            <option value="<?= $letter ?>" <?= $old['section'] === $letter ? 'selected' : '' ?>><?= $letter ?></option>
+        <?php endfor; ?>
+    </select>
+</div>
+<div class="hint">Course</div>
+
+<input type="number" name="age" placeholder="Age" class="input" value="<?= htmlspecialchars($old['age']) ?>" required>
 <input type="password" name="password" placeholder="Password" class="input" required>
 
 <button class="btn">Sign Up</button>
@@ -242,7 +182,26 @@ h2 {
 Already have an account? <a href="login.php">Login</a>
 </div>
 
+<a href="admin_signup.php" class="switch-btn">
+    <svg viewBox="0 0 24 24">
+        <path d="M4 8h14M18 8l-3.5-3.5M18 8l-3.5 3.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M20 16H6M6 16l3.5-3.5M6 16l3.5 3.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    Switch to Admin Registration
+</a>
+
 </div>
+
+<script>
+document.getElementById("backBtn").addEventListener("click", function(e) {
+    e.preventDefault();
+    if (document.referrer && document.referrer.indexOf(window.location.host) !== -1) {
+        window.history.back();
+    } else {
+        window.location.href = "index.html";
+    }
+});
+</script>
 
 </body>
 </html>

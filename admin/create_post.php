@@ -33,7 +33,7 @@ if (!empty($_FILES['image']['name'])) {
     }
 }
 
-// ✅ INSERT POST
+// INSERT POST
 $stmt = $conn->prepare("
     INSERT INTO posts (title, content, tag, image, created_at)
     VALUES (?, ?, ?, ?, NOW())

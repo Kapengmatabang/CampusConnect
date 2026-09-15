@@ -1,0 +1,867 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+
+/* =========================================================
+   THEME VARIABLES
+   Shared with dashboard / explore_orgs
+   ========================================================= */
+
+:root {
+    --bg-gradient-1: #0f172a;
+    --bg-gradient-2: #1e293b;
+
+    --text-main: #ffffff;
+    --text-secondary: #cccccc;
+
+    --panel-bg: rgba(255, 255, 255, 0.08);
+    --panel-border: rgba(255, 255, 255, 0.15);
+
+    --sidebar-bg: rgba(255, 255, 255, 0.05);
+
+    --hover-bg: rgba(255, 255, 255, 0.1);
+    --hover-bg-soft: rgba(255, 255, 255, 0.05);
+
+    --input-bg: rgba(255, 255, 255, 0.08);
+    --input-border: rgba(255, 255, 255, 0.2);
+
+    --bar-track: rgba(255, 255, 255, 0.1);
+}
+
+
+/* LIGHT THEME */
+
+html.light {
+    --bg-gradient-1: #f3f4f6;
+    --bg-gradient-2: #ffffff;
+
+    --text-main: #111827;
+    --text-secondary: #6b7280;
+
+    --panel-bg: #ffffff;
+    --panel-border: #e5e7eb;
+
+    --sidebar-bg: #ffffff;
+
+    --hover-bg: #f3f4f6;
+    --hover-bg-soft: #f9fafb;
+
+    --input-bg: #f9fafb;
+    --input-border: #d1d5db;
+
+    --bar-track: #e5e7eb;
+}
+
+
+/* =========================================================
+   BODY
+   ========================================================= */
+
+body {
+    font-family: "Segoe UI", sans-serif;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--bg-gradient-1),
+            var(--bg-gradient-2)
+        );
+
+    color: var(--text-main);
+
+    min-height: 100vh;
+
+    transition:
+        background 0.3s ease,
+        color 0.3s ease;
+}
+
+
+/* =========================================================
+   TOP BAR
+   ========================================================= */
+
+.topbar {
+    padding: 20px 25px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+
+/* BACK BUTTON */
+
+.back-btn {
+    padding: 8px 16px;
+
+    border-radius: 20px;
+
+    background: var(--hover-bg-soft);
+
+    color: var(--text-main);
+
+    text-decoration: none;
+
+    border: 1px solid var(--panel-border);
+
+    transition: 0.3s;
+}
+
+.back-btn:hover {
+    background: var(--hover-bg);
+}
+
+
+/* =========================================================
+   MAIN CONTAINER
+   ========================================================= */
+
+.container {
+    max-width: 800px;
+
+    margin: 0 auto;
+
+    padding: 0 20px 50px;
+}
+
+
+/* HEADINGS */
+
+h1 {
+    font-size: 26px;
+
+    margin-bottom: 4px;
+}
+
+.subtitle {
+    color: var(--text-secondary);
+
+    font-size: 14px;
+
+    margin-bottom: 25px;
+}
+
+
+/* =========================================================
+   CARD
+   ========================================================= */
+
+.card {
+    background: var(--panel-bg);
+
+    backdrop-filter: blur(12px);
+
+    border: 1px solid var(--panel-border);
+
+    border-radius: 15px;
+
+    padding: 20px;
+
+    margin-bottom: 20px;
+}
+
+.card h3 {
+    margin-bottom: 12px;
+
+    font-size: 16px;
+}
+
+.card-sub {
+    color: var(--text-secondary);
+
+    font-size: 12px;
+
+    margin-top: -8px;
+
+    margin-bottom: 16px;
+}
+
+
+/* =========================================================
+   ORGANIZATION LOAD BANNER
+   ========================================================= */
+
+.load-banner {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 14px 18px;
+
+    border-radius: 12px;
+
+    margin-bottom: 20px;
+
+    font-size: 14px;
+}
+
+
+/* OK */
+
+.load-ok {
+    background: rgba(34, 197, 94, 0.15);
+
+    border: 1px solid rgba(34, 197, 94, 0.35);
+
+    color: #22c55e;
+}
+
+
+/* WARNING */
+
+.load-warn {
+    background: rgba(250, 204, 21, 0.15);
+
+    border: 1px solid rgba(250, 204, 21, 0.35);
+
+    color: #facc15;
+}
+
+
+.load-icon {
+    font-size: 22px;
+}
+
+
+/* =========================================================
+   SUPPORT NUDGE
+   ========================================================= */
+
+.support-nudge {
+    background: rgba(56, 189, 248, 0.15);
+
+    border: 1px solid rgba(56, 189, 248, 0.35);
+
+    color: #38bdf8;
+
+    padding: 16px 18px;
+
+    border-radius: 12px;
+
+    margin-bottom: 20px;
+
+    font-size: 14px;
+
+    line-height: 1.6;
+}
+
+.support-nudge a {
+    color: #38bdf8;
+
+    font-weight: bold;
+}
+
+
+/* =========================================================
+   BALANCE CARD
+   ========================================================= */
+
+.balance-header-row {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-bottom: 4px;
+}
+
+
+/* BALANCE BADGE */
+
+.balance-badge {
+    padding: 5px 12px;
+
+    border-radius: 20px;
+
+    font-size: 12px;
+
+    font-weight: bold;
+}
+
+.balance-badge.ok {
+    background: rgba(34, 197, 94, 0.15);
+
+    color: #22c55e;
+
+    border: 1px solid rgba(34, 197, 94, 0.35);
+}
+
+.balance-badge.warn {
+    background: rgba(250, 204, 21, 0.15);
+
+    color: #facc15;
+
+    border: 1px solid rgba(250, 204, 21, 0.35);
+}
+
+.balance-badge.neutral {
+    background: rgba(148, 163, 184, 0.15);
+
+    color: #94a3b8;
+
+    border: 1px solid rgba(148, 163, 184, 0.35);
+}
+
+
+/* =========================================================
+   BALANCE STATS
+   ========================================================= */
+
+.balance-stats-row {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 10px;
+
+    margin-bottom: 18px;
+}
+
+.balance-stat {
+    background: var(--hover-bg-soft);
+
+    border: 1px solid var(--panel-border);
+
+    border-radius: 10px;
+
+    padding: 10px 14px;
+}
+
+.balance-stat .stat-label {
+    font-size: 11px;
+
+    color: var(--text-secondary);
+
+    margin-bottom: 2px;
+}
+
+.balance-stat .stat-value {
+    font-size: 18px;
+
+    font-weight: bold;
+}
+
+.balance-stat.study .stat-value {
+    color: #34d399;
+}
+
+.balance-stat.org .stat-value {
+    color: #a78bfa;
+}
+
+
+/* =========================================================
+   CHART LEGEND
+   ========================================================= */
+
+.chart-legend {
+    display: flex;
+
+    gap: 16px;
+
+    font-size: 12px;
+
+    color: var(--text-secondary);
+
+    margin-bottom: 10px;
+}
+
+.legend-dot {
+    display: inline-block;
+
+    width: 9px;
+    height: 9px;
+
+    border-radius: 50%;
+
+    margin-right: 5px;
+}
+
+.legend-dot.study {
+    background: #34d399;
+}
+
+.legend-dot.org {
+    background: #a78bfa;
+}
+
+
+/* =========================================================
+   TREND LINE CHART
+   ========================================================= */
+
+.trend-chart-wrap {
+    margin-bottom: 18px;
+}
+
+.trend-svg {
+    width: 100%;
+
+    height: 110px;
+
+    display: block;
+
+    overflow: visible;
+}
+
+.trend-line {
+    fill: none;
+
+    stroke-width: 2.5;
+
+    stroke-linejoin: round;
+
+    stroke-linecap: round;
+}
+
+.trend-line.study {
+    stroke: #34d399;
+}
+
+.trend-line.org {
+    stroke: #a78bfa;
+}
+
+.trend-dot {
+    stroke: var(--bg-gradient-2);
+
+    stroke-width: 1.5;
+}
+
+.trend-dot.study {
+    fill: #34d399;
+}
+
+.trend-dot.org {
+    fill: #a78bfa;
+}
+
+
+/* TREND LABELS */
+
+.trend-labels {
+    display: flex;
+
+    justify-content: space-between;
+
+    margin-top: 6px;
+}
+
+.trend-day-label {
+    flex: 1;
+
+    text-align: center;
+
+    font-size: 10px;
+
+    color: var(--text-secondary);
+}
+
+
+/* =========================================================
+   INSIGHTS
+   ========================================================= */
+
+.insight-list {
+    list-style: none;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 10px;
+}
+
+.insight-list li {
+    display: flex;
+
+    gap: 10px;
+
+    font-size: 13px;
+
+    line-height: 1.5;
+
+    background: var(--hover-bg-soft);
+
+    border: 1px solid var(--panel-border);
+
+    border-radius: 10px;
+
+    padding: 10px 14px;
+}
+
+.insight-icon {
+    flex-shrink: 0;
+}
+
+
+/* =========================================================
+   FORM
+   ========================================================= */
+
+.rating-group {
+    display: flex;
+
+    gap: 8px;
+
+    margin-bottom: 16px;
+}
+
+.rating-option {
+    flex: 1;
+
+    text-align: center;
+
+    padding: 10px 6px;
+
+    border-radius: 10px;
+
+    border: 1px solid var(--input-border);
+
+    background: var(--input-bg);
+
+    cursor: pointer;
+
+    transition: 0.2s;
+
+    font-size: 13px;
+}
+
+.rating-option:hover {
+    background: var(--hover-bg);
+}
+
+
+/* SELECTED RATING */
+
+.rating-option.selected {
+    background: #22c55e;
+
+    border-color: #22c55e;
+
+    color: white;
+
+    font-weight: bold;
+}
+
+
+/* MOOD LABEL */
+
+.rating-option .mood-label {
+    font-size: 11px;
+
+    font-weight: 600;
+
+    display: block;
+
+    margin-bottom: 4px;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.03em;
+}
+
+
+/* FIELD LABEL */
+
+label.field-label {
+    display: block;
+
+    font-size: 13px;
+
+    color: var(--text-secondary);
+
+    margin-bottom: 6px;
+}
+
+
+/* HOURS */
+
+.hours-row {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr 1fr;
+
+    gap: 10px;
+
+    margin-bottom: 16px;
+}
+
+
+/* INPUTS */
+
+input[type="number"],
+textarea {
+    width: 100%;
+
+    padding: 10px;
+
+    border-radius: 8px;
+
+    border: 1px solid var(--input-border);
+
+    background: var(--input-bg);
+
+    color: var(--text-main);
+
+    font-family: inherit;
+
+    font-size: 14px;
+}
+
+textarea {
+    resize: vertical;
+
+    min-height: 60px;
+
+    margin-bottom: 16px;
+}
+
+
+/* =========================================================
+   SUBMIT BUTTON
+   ========================================================= */
+
+.submit-btn {
+    width: 100%;
+
+    padding: 12px;
+
+    border: none;
+
+    border-radius: 25px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #22c55e,
+            #16a34a
+        );
+
+    color: white;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: 0.3s;
+}
+
+.submit-btn:hover {
+    transform: translateY(-2px);
+}
+
+
+/* =========================================================
+   ALERTS
+   ========================================================= */
+
+.alert {
+    padding: 10px 14px;
+
+    border-radius: 8px;
+
+    margin-bottom: 16px;
+
+    font-size: 13px;
+}
+
+.alert.error {
+    background: rgba(239, 68, 68, 0.2);
+
+    color: #ef4444;
+}
+
+.alert.success {
+    background: rgba(34, 197, 94, 0.2);
+
+    color: #22c55e;
+}
+
+
+/* =========================================================
+   HISTORY
+   ========================================================= */
+
+.history-item {
+    display: grid;
+
+    grid-template-columns: 90px 1fr 60px;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 10px 0;
+
+    border-bottom: 1px solid var(--panel-border);
+
+    font-size: 13px;
+}
+
+.history-item:last-child {
+    border-bottom: none;
+}
+
+.history-date {
+    color: var(--text-secondary);
+}
+
+
+/* HISTORY BARS */
+
+.bar-row {
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin-bottom: 4px;
+}
+
+.bar-label {
+    width: 45px;
+
+    color: var(--text-secondary);
+
+    font-size: 11px;
+}
+
+.bar-track {
+    flex: 1;
+
+    height: 8px;
+
+    background: var(--bar-track);
+
+    border-radius: 4px;
+
+    overflow: hidden;
+}
+
+.bar-fill {
+    height: 100%;
+
+    border-radius: 4px;
+}
+
+.bar-fill.mood {
+    background: #008000;
+}
+
+.bar-fill.stress {
+    background: #d10000;
+}
+
+
+/* =========================================================
+   HISTORY SLEEP
+   ========================================================= */
+
+.history-sleep {
+    text-align: right;
+
+    color: var(--text-secondary);
+}
+
+
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
+
+.empty-state {
+    text-align: center;
+
+    color: var(--text-secondary);
+
+    font-size: 13px;
+
+    padding: 10px 0;
+}
+
+
+/* =========================================================
+   RESPONSIVE DESIGN
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    .container {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .balance-header-row {
+        gap: 10px;
+    }
+
+    .hours-row {
+        grid-template-columns: 1fr;
+    }
+
+    .history-item {
+        grid-template-columns: 70px 1fr;
+    }
+
+    .history-sleep {
+        grid-column: 2;
+
+        text-align: left;
+
+        margin-top: 4px;
+    }
+
+}
+
+
+@media (max-width: 500px) {
+
+    .topbar {
+        padding: 15px;
+    }
+
+    h1 {
+        font-size: 23px;
+    }
+
+    .subtitle {
+        font-size: 13px;
+    }
+
+    .card {
+        padding: 16px;
+    }
+
+    .rating-group {
+        gap: 5px;
+    }
+
+    .rating-option {
+        padding: 9px 4px;
+
+        font-size: 12px;
+    }
+
+    .rating-option .mood-label {
+        font-size: 9px;
+    }
+
+    .balance-stats-row {
+        grid-template-columns: 1fr;
+    }
+
+    .balance-header-row {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+}

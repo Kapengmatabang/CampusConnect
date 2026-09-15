@@ -1,0 +1,307 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ============ THEME VARIABLES ============ */
+
+:root {
+    --bg-gradient-1: #0f172a;
+    --bg-gradient-2: #1e293b;
+
+    --text-main: #ffffff;
+    --text-secondary: #cccccc;
+
+    --panel-bg: rgba(255, 255, 255, 0.08);
+    --panel-border: rgba(255, 255, 255, 0.15);
+
+    --sidebar-bg: rgba(255, 255, 255, 0.05);
+    --sidebar-border: rgba(255, 255, 255, 0.1);
+
+    --hover-bg: rgba(255, 255, 255, 0.1);
+    --hover-bg-soft: rgba(255, 255, 255, 0.05);
+
+    --th-bg: rgba(255, 255, 255, 0.1);
+    --row-border: rgba(255, 255, 255, 0.1);
+
+    --loading-color: #aaa;
+}
+
+html.light {
+    --bg-gradient-1: #f3f4f6;
+    --bg-gradient-2: #ffffff;
+
+    --text-main: #111827;
+    --text-secondary: #6b7280;
+
+    --panel-bg: #ffffff;
+    --panel-border: #e5e7eb;
+
+    --sidebar-bg: #ffffff;
+    --sidebar-border: #e5e7eb;
+
+    --hover-bg: #f3f4f6;
+    --hover-bg-soft: #f9fafb;
+
+    --th-bg: #f3f4f6;
+    --row-border: #e5e7eb;
+
+    --loading-color: #9ca3af;
+}
+
+/* ============ BODY ============ */
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+
+    background: linear-gradient(
+        135deg,
+        var(--bg-gradient-1),
+        var(--bg-gradient-2)
+    );
+
+    color: var(--text-main);
+
+    display: flex;
+
+    min-height: 100vh;
+
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* ============ SIDEBAR ============ */
+
+.sidebar {
+    width: 230px;
+
+    background: var(--sidebar-bg);
+
+    backdrop-filter: blur(12px);
+
+    border-right: 1px solid var(--sidebar-border);
+
+    height: 100vh;
+
+    padding: 20px;
+
+    transition:
+        background 0.3s ease,
+        border-color 0.3s ease;
+}
+
+.sidebar h2 {
+    margin-bottom: 20px;
+}
+
+.sidebar a {
+    display: block;
+
+    padding: 12px;
+
+    margin-bottom: 8px;
+
+    border-radius: 8px;
+
+    color: var(--text-main);
+
+    text-decoration: none;
+
+    transition: 0.3s;
+}
+
+.sidebar a:hover {
+    background: var(--hover-bg);
+
+    transform: translateX(5px);
+}
+
+/* ============ THEME TOGGLE ============ */
+
+.theme-toggle {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    background: var(--hover-bg-soft);
+
+    border: 1px solid var(--panel-border);
+
+    border-radius: 30px;
+
+    padding: 6px 10px;
+
+    margin-bottom: 20px;
+
+    cursor: pointer;
+
+    font-size: 13px;
+
+    color: var(--text-main);
+
+    transition: 0.3s;
+}
+
+.theme-toggle:hover {
+    background: var(--hover-bg);
+}
+
+.theme-toggle .icon {
+    font-size: 16px;
+}
+
+/* ============ MAIN ============ */
+
+.main {
+    flex: 1;
+
+    padding: 25px;
+}
+
+/* ============ GLASS CARD ============ */
+
+.card {
+    background: var(--panel-bg);
+
+    backdrop-filter: blur(12px);
+
+    border: 1px solid var(--panel-border);
+
+    border-radius: 15px;
+
+    padding: 20px;
+
+    margin-bottom: 20px;
+
+    animation: fadeUp 0.4s ease;
+
+    transition:
+        background 0.3s ease,
+        border-color 0.3s ease;
+}
+
+/* ============ PROFILE ============ */
+
+.profile h2 {
+    margin-bottom: 5px;
+}
+
+.profile p {
+    color: var(--text-secondary);
+
+    font-size: 14px;
+}
+
+/* ============ TABLE ============ */
+
+table {
+    width: 100%;
+
+    border-collapse: collapse;
+
+    margin-top: 10px;
+}
+
+th {
+    background: var(--th-bg);
+
+    padding: 12px;
+
+    font-size: 13px;
+
+    color: var(--text-main);
+}
+
+td {
+    padding: 10px;
+
+    font-size: 13px;
+
+    border-bottom: 1px solid var(--row-border);
+
+    color: var(--text-main);
+}
+
+tr:hover {
+    background: var(--hover-bg-soft);
+}
+
+/* ============ STATUS COLORS ============ */
+
+.pending {
+    color: #facc15;
+
+    font-weight: bold;
+}
+
+.approved {
+    color: #22c55e;
+
+    font-weight: bold;
+}
+
+.rejected {
+    color: #ef4444;
+
+    font-weight: bold;
+}
+
+.interview {
+    color: #38bdf8;
+
+    font-weight: bold;
+}
+
+/* ============ BUTTON ============ */
+
+.cancel-btn {
+    background: linear-gradient(
+        135deg,
+        #ef4444,
+        #b91c1c
+    );
+
+    border: none;
+
+    padding: 6px 12px;
+
+    color: white;
+
+    border-radius: 8px;
+
+    cursor: pointer;
+
+    transition: 0.3s;
+}
+
+.cancel-btn:hover {
+    transform: scale(1.05);
+}
+
+/* ============ LOADING ============ */
+
+.loading {
+    text-align: center;
+
+    color: var(--loading-color);
+}
+
+/* ============ ANIMATION ============ */
+
+@keyframes fadeUp {
+
+    from {
+        opacity: 0;
+
+        transform: translateY(15px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform: translateY(0);
+    }
+
+}

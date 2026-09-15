@@ -10,12 +10,12 @@ function sendMail($toEmail, $toName, $subject, $body) {
         $mail->isSMTP();
         $mail->Host       = 'smtp.gmail.com';
         $mail->SMTPAuth   = true;
-        $mail->Username   = 'millionmikay@gmail.com';     // ← your Gmail
-        $mail->Password   = 'ceflpwtnrlzflnyx';        // ← Gmail App Password
+        $mail->Username   = 'campusconnect.plmun@gmail.com';     // ← your Gmail
+        $mail->Password   = 'fxtdczzikbbgvmvm';        // ← Gmail App Password
         $mail->SMTPSecure = 'tls';
         $mail->Port       = 587;
 
-        $mail->setFrom('millionmikay@gmail.com', 'CampusConnect Admin');
+        $mail->setFrom('campusconnect.plmun@gmail.com', 'CampusConnect Admin');
         $mail->addAddress($toEmail, $toName);
 
         $mail->isHTML(true);

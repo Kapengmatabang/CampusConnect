@@ -1,241 +1,242 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PLMUN Organization Recruitment</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CAMPUS CONNECT</title>
 
-<link rel="icon" type="image/png" href="img/favicon.png">
+    <link rel="icon" type="image/png" href="img/favicon.png" />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
 
-<style>
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
+  <body>
+    <!-- NAVBAR -->
+    <nav class="navbar">
+      <div class="nav-logo">
+        <img src="img/cclogo.png" alt="PLMUN Logo" />
+      </div>
 
-body {
-    font-family: 'Segoe UI', sans-serif;
-    color: white;
-    background: #0f172a;
-}
+      <div class="nav-links" id="navLinks">
+        <a href="#home">Home</a>
+        <a href="feed.php">Feed</a>
+        <a href="about.html">About</a>
+        <a href="#contact">Contact</a>
 
-/* HERO */
-.hero {
-    height: 100vh;
-    background:
-        linear-gradient(135deg, rgba(10,92,10,0.7), rgba(0,0,0,0.8)),
-        url('img/bg.jpg') no-repeat center/cover;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    position: relative;
-}
-
-.logo-container {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-}
-.logo-container img {
-    height: 80px;
-}
-
-/* TEXT */
-.heading-text {
-    font-size: 52px;
-    font-weight: 700;
-    margin-bottom: 10px;
-    animation: fadeUp 1s ease;
-}
-
-.sub-text {
-    font-size: 20px;
-    margin-bottom: 30px;
-    opacity: 0.9;
-    animation: fadeUp 1.3s ease;
-}
-
-/* BUTTONS */
-.btn-group {
-    display: flex;
-    gap: 15px;
-    justify-content: center;
-}
-
-.login-btn {
-    padding: 12px 28px;
-    border-radius: 30px;
-    border: none;
-    cursor: pointer;
-    font-weight: bold;
-    transition: 0.3s;
-    backdrop-filter: blur(10px);
-    background: rgba(255,255,255,0.15);
-    color: white;
-    border: 1px solid rgba(255,255,255,0.3);
-}
-
-.login-btn:hover {
-    transform: translateY(-3px);
-    background: rgba(255,255,255,0.25);
-}
-
-.login-btn.outline {
-    background: transparent;
-}
-
-/* NEWS FEED */
-.timeline-section {
-    padding: 60px 20px;
-    background: linear-gradient(to bottom, #0f172a, #1e293b);
-}
-
-.timeline-section h2 {
-    text-align: center;
-    margin-bottom: 30px;
-}
-
-.timeline {
-    max-width: 900px;
-    margin: auto;
-}
-
-/* 🔥 ULTRA COMPACT CARD */
-.timeline-item {
-    background: rgba(255,255,255,0.07);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255,255,255,0.12);
-    color: white;
-
-    padding: 8px;          /* 🔥 smaller */
-    border-radius: 10px;
-    margin-bottom: 10px;   /* 🔥 tighter spacing */
-
-    transition: 0.2s;
-    animation: fadeUp 0.3s ease;
-}
-
-.timeline-item:hover {
-    transform: translateY(-2px);
-}
-
-/* 🔥 SMALLER TEXT */
-.timeline-item h4 {
-    font-size: 14px;
-    margin: 2px 0;
-}
-
-.timeline-item p {
-    font-size: 12px;
-    margin-top: 3px;
-    color: #ccc;
-}
-
-.post-date {
-    font-size: 10px;
-    margin-top: 4px;
-}
-
-/* 🔥 IMAGE (FULL + CLEAN) */
-.timeline-item img {
-    width: 100%;
-    margin-top: 6px;
-    border-radius: 8px;
-
-    height: auto;
-    object-fit: contain;
-
-    background: #000;
-}
-
-/* 🔥 TAGS SMALLER */
-.tag {
-    font-size: 10px;
-    padding: 3px 8px;
-    border-radius: 12px;
-}
-
-/* FOOTER */
-.footer {
-    background: #020617;
-    text-align: center;
-    padding: 15px;
-    font-size: 14px;
-    color: #aaa;
-}
-
-/* ANIMATION */
-@keyframes fadeUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-</style>
-</head>
-
-<body>
-
-<!-- HERO -->
-<div class="hero">
-    <div class="logo-container">
-        <img src="img/cclogo.png" class="logo-img">
-    </div>
-
-    <div>
-        <div class="heading-text">Find Your Community</div>
-        <div class="sub-text">Join. Apply. Get Involved.</div>
-
-        <div class="btn-group">
-            <a href="login.php"><button class="login-btn">Login</button></a>
-            <a href="signup.php"><button class="login-btn outline">Sign Up</button></a>
+        <div class="nav-buttons">
+          <a href="login.php"><button class="login-btn small">Login</button></a>
+          <a href="signup.php"
+            ><button class="login-btn outline small">Sign Up</button></a
+          >
         </div>
+      </div>
+    </nav>
+
+    <!-- FLOATING MOBILE BOTTOM NAVBAR -->
+    <nav class="mobile-navbar" id="mobileNavbar">
+      <a href="#home" class="mnav-item active">
+        <svg viewBox="0 0 24 24">
+          <path d="M3 11.5 12 4l9 7.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M5.5 10v9a1 1 0 0 0 1 1H9v-5.5a1.5 1.5 0 0 1 1.5-1.5h3a1.5 1.5 0 0 1 1.5 1.5V20h2.5a1 1 0 0 0 1-1v-9" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+
+      <a href="feed.php" class="mnav-item">
+        <svg viewBox="0 0 24 24">
+          <rect x="3.5" y="5" width="17" height="16" rx="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M8 3v4M16 3v4M3.5 10h17" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+
+      <a href="signup.php" class="mnav-fab" aria-label="Sign Up">
+        <svg viewBox="0 0 24 24">
+          <path d="M12 5v14M5 12h14" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+
+      <a href="about.html" class="mnav-item">
+        <svg viewBox="0 0 24 24">
+          <circle cx="11" cy="11" r="7" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M20.5 20.5 16.5 16.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+
+      <a href="login.php" class="mnav-item">
+        <svg viewBox="0 0 24 24">
+          <circle cx="9" cy="8" r="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M4.5 19c.6-3 2.5-4.6 4.5-4.6S13 16 13.5 19" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M15.5 8h5M15.5 12h5M15.5 16h3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </nav>
+
+    <!-- HERO -->
+    <div class="hero" id="home">
+      <div>
+        <div class="heading-text">Your Campus Journey Starts Here</div>
+        <div class="sub-text">
+          Explore student organizations, join exciting events, and build
+          meaningful connections.
+        </div>
+      </div>
     </div>
-</div>
 
-<!-- NEWS FEED -->
-<div class="timeline-section">
-    <h2>📢 News Feed</h2>
+    <!-- ABOUT TEASER (full About/Mission/Vision content now lives on about.html) -->
+    <div class="info-section about-teaser" id="about">
 
-    <div class="timeline" id="feed">
-        <p style="text-align:center; color:#aaa;">Loading posts...</p>
+      <div class="dot-grid left"></div>
+      <div class="side-decor left">
+        <svg viewBox="0 0 100 100" fill="none">
+          <path d="M15 40 L50 22 L85 40 L50 58 Z" stroke="#16a34a" stroke-width="2.5" stroke-linejoin="round"/>
+          <path d="M30 47 V68 Q50 80 70 68 V47" stroke="#16a34a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <line x1="85" y1="40" x2="85" y2="62" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+
+      <div class="dot-grid right"></div>
+      <div class="side-decor right">
+        <svg viewBox="0 0 100 100" fill="none">
+          <path d="M50 20 V80 M50 20 C35 24 22 24 15 30 V72 C22 66 35 66 50 70 M50 20 C65 24 78 24 85 30 V72 C78 66 65 66 50 70" stroke="#f5a623" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+        </svg>
+      </div>
+
+      <span class="eyebrow">About Us</span>
+      <h2>Built for PLMUN, by PLMUN</h2>
+      <p>
+        CampusConnect is the official student organization recruitment and campus engagement platform of Pamantasan ng Lungsod ng Muntinlupa — one place to discover organizations, apply online, and track your status.
+      </p>
+      <a href="about.html" class="about-teaser-link">Learn More About Us →</a>
     </div>
-</div>
 
-<!-- FOOTER -->
-<div class="footer">
-© 2026 PLMUN CampusConnect
-</div>
+    <!--FEATURES-->
+    <div class="info-section alt" id="features">
+      <h1>What You Can Do in CampusConnect?</h1>
 
-<script>
-// LOAD POSTS
-function loadPosts(){
-    fetch("fetch_posts.php")
-    .then(res => res.text())
-    .then(data => {
-        if(data.trim() === ""){
-            document.getElementById("feed").innerHTML =
-                "<p style='text-align:center;'>No posts yet.</p>";
-        } else {
-            document.getElementById("feed").innerHTML = data;
-        }
-    })
-    .catch(() => {
-        document.getElementById("feed").innerHTML =
-            "<p style='text-align:center;color:red;'>Failed to load posts</p>";
-    });
-}
+      <div class="feature-carousel">
+        <button class="carousel-arrow left" id="prevFeature" aria-label="Previous">&#10094;</button>
 
-// AUTO REFRESH
-loadPosts();
-setInterval(loadPosts, 5000);
-</script>
+        <div class="feature-track-wrapper">
+          <div class="feature-track" id="featureTrack">
+            <div class="feature-card">
+              <h2>Discover Student Organizations</h2>
+              <p>Browse accredited student clubs and organizations based on your interests, academic programs, and extracurricular activities.</p>
+            </div>
+            <div class="feature-card">
+              <h2>Apply Online</h2>
+              <p>Submit organization applications without the need for printed forms. Track your application status in real time.</p>
+            </div>
+            <div class="feature-card">
+              <h2>Stay Updated</h2>
+              <p>Receive announcements about recruitment periods, campus activities, seminars, workshops, competitions, and university events.</p>
+            </div>
+            <div class="feature-card">
+              <h2>View Upcoming Events</h2>
+              <p>See upcoming organization activities through an organized event calendar.</p>
+            </div>
+            <div class="feature-card">
+              <h2>Get Notifications</h2>
+              <p>Receive notifications regarding announcements, application updates, interview schedules, and event reminders.</p>
+            </div>
+            <div class="feature-card">
+              <h2>Connect with the Community</h2>
+              <p>Interact with organizations and become part of a vibrant student community that encourages collaboration and leadership.</p>
+            </div>
+          </div>
+        </div>
 
-</body>
+        <button class="carousel-arrow right" id="nextFeature" aria-label="Next">&#10095;</button>
+      </div>
+
+      <div class="carousel-dots" id="carouselDots"></div>
+    </div>
+
+    <!-- CONTACT -->
+    <div class="info-section" id="contact">
+      <div class="side-decor left">
+        <svg viewBox="0 0 100 100" fill="none">
+          <rect x="15" y="28" width="70" height="46" rx="6" stroke="#16a34a" stroke-width="2.5"/>
+          <path d="M15 32 L50 56 L85 32" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="side-decor right">
+        <svg viewBox="0 0 100 100" fill="none">
+          <path d="M25 20 L25 80 M25 20 L75 20 Q85 20 85 32 Q85 44 75 44 L25 44" stroke="#f5a623" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <h2>Contact Us</h2>
+      <p>Have questions or suggestions? Reach out to us anytime.</p>
+
+      <ul class="contact-details">
+        <li>Email: <a href="mailto:campusconnect@plmun.edu.ph">campusconnect@gmail.com</a></li>
+      </ul>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+      <div class="footer-inner">
+        <div class="footer-logo">
+          <img src="img/cclogo.png" alt="PLMUN Logo" />
+          CampusConnect
+        </div>
+
+        <div class="footer-links">
+          <a href="#home">Home</a>
+          <a href="feed.php">Feed</a>
+          <a href="about.html">About</a>
+          <a href="#contact">Contact</a>
+          <a href="login.php">Login</a>
+          <a href="signup.php">Sign Up</a>
+        </div>
+
+        <div class="footer-divider"></div>
+
+        <div class="footer-bottom">© 2026 PLMUN CampusConnect. All rights reserved.</div>
+      </div>
+    </div>
+
+    <script>
+      // FEATURE CAROUSEL
+      const featureTrack = document.getElementById("featureTrack");
+      const featureCards = document.querySelectorAll(".feature-card");
+      const dotsContainer = document.getElementById("carouselDots");
+      let currentFeature = 0;
+
+      featureCards.forEach((_, i) => {
+        const dot = document.createElement("div");
+        dot.classList.add("dot");
+        if (i === 0) dot.classList.add("active");
+        dot.addEventListener("click", () => goToFeature(i));
+        dotsContainer.appendChild(dot);
+      });
+
+      function updateCarousel() {
+        featureTrack.style.transform = `translateX(-${currentFeature * 100}%)`;
+        document.querySelectorAll(".dot").forEach((dot, i) => {
+          dot.classList.toggle("active", i === currentFeature);
+        });
+      }
+
+      function goToFeature(index) {
+        currentFeature = index;
+        updateCarousel();
+      }
+
+      document.getElementById("nextFeature").addEventListener("click", () => {
+        currentFeature = (currentFeature + 1) % featureCards.length;
+        updateCarousel();
+      });
+
+      document.getElementById("prevFeature").addEventListener("click", () => {
+        currentFeature = (currentFeature - 1 + featureCards.length) % featureCards.length;
+        updateCarousel();
+      });
+
+      // MOBILE NAVBAR ACTIVE STATE
+      document.querySelectorAll(".mnav-item").forEach((item) => {
+        item.addEventListener("click", () => {
+          document.querySelectorAll(".mnav-item").forEach((i) => i.classList.remove("active"));
+          item.classList.add("active");
+        });
+      });
+    </script>
+  </body>
 </html>

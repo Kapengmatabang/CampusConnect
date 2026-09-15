@@ -1,61 +1,106 @@
 <?php
-session_start();
-if (!isset($_SESSION['user']) || $_SESSION['usertype'] !== 'admin') {
-    header("Location: ../login.php");
-    exit();
+require 'auth.php'; // sets $conn, $scopedOrgId, $isSuperAdmin; redirects if not logged in as admin
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+require '../vendor/autoload.php';
+
+$id     = intval($_POST['id'] ?? 0);
+$status = $_POST['status'] ?? '';
+
+$allowedStatuses = ['Approved', 'Rejected'];
+if (!$id || !in_array($status, $allowedStatuses, true)) {
+    die(" Missing or invalid data.");
 }
 
-require '../mailer.php'; // adjust path if needed
+// RBAC CHECK: a scoped org admin can only act on applications that
+// belong to their own organization.
+requireOrgAccessToApplication($conn, $id, $scopedOrgId, $isSuperAdmin);
 
-$conn = new mysqli("localhost", "root", "", "campusconnect");
-if ($conn->connect_error) die("DB Error");
+// ================= UPDATE STATUS =================
+if ($status === 'Rejected') {
+    // Store the reapply date in the DB (not just in the email text) so
+    // it can be shown on Records and checked later by the notifier script.
+    $reapplyDateSql = date('Y-m-d', strtotime('+30 days'));
+    $stmt = $conn->prepare("
+        UPDATE applications
+        SET status = ?, reapply_date = ?, reapply_notified = 0
+        WHERE application_id = ?
+    ");
+    $stmt->bind_param("ssi", $status, $reapplyDateSql, $id);
+} else {
+    $stmt = $conn->prepare("UPDATE applications SET status = ? WHERE application_id = ?");
+    $stmt->bind_param("si", $status, $id);
+}
+$stmt->execute();
 
-$id     = intval($_POST['id']);
-$status = $_POST['status']; // 'Approved' or 'Rejected'
-
-// Get application details (student name, email, org name)
-$stmt = $conn->prepare("
-    SELECT s.full_name, s.email, o.org_name
+// ================= GET STUDENT + ORG INFO FOR EMAIL =================
+$get = $conn->prepare("
+    SELECT s.email, s.full_name, o.org_name
     FROM applications a
-    LEFT JOIN students s ON a.student_id = s.student_id
-    LEFT JOIN organizations o ON a.org_id = o.org_id
+    JOIN students s ON a.student_id = s.student_id
+    JOIN organizations o ON a.org_id = o.org_id
     WHERE a.application_id = ?
 ");
-$stmt->bind_param("i", $id);
-$stmt->execute();
-$result = $stmt->get_result();
-$data   = $result->fetch_assoc();
+$get->bind_param("i", $id);
+$get->execute();
+$data = $get->get_result()->fetch_assoc();
 
-// Update status
-$upd = $conn->prepare("UPDATE applications SET status = ? WHERE application_id = ?");
-$upd->bind_param("si", $status, $id);
-$upd->execute();
+if ($data) {
 
-// Send email
-$name    = $data['full_name'];
-$email   = $data['email'];
-$org     = $data['org_name'];
+    $mail = new PHPMailer(true);
 
-if ($status === 'Approved') {
-    $subject = "Congratulations! Your Application to $org is Approved";
-    $body    = "
-        <h2>Hello, $name!</h2>
-        <p>We are happy to inform you that your application to join <strong>$org</strong> has been <strong style='color:green;'>APPROVED</strong>.</p>
-        <p>Welcome to the organization! Further onboarding details will be sent to you soon.</p>
-        <br><p>— CampusConnect Admin</p>
-    ";
-} else {
-    $subject = "Update on Your Application to $org";
-    $body    = "
-        <h2>Hello, $name!</h2>
-        <p>Thank you for your interest in joining <strong>$org</strong>.</p>
-        <p>After careful review, we regret to inform you that your application has been <strong style='color:red;'>REJECTED</strong> at this time.</p>
-        <p>We encourage you to apply again in the future. Thank you for your effort.</p>
-        <br><p>— CampusConnect Admin</p>
-    ";
+    try {
+        $mail->isSMTP();
+        $mail->Host = 'smtp.gmail.com';
+        $mail->SMTPAuth = true;
+
+        $mail->Username = 'millionmikay@gmail.com';
+        $mail->Password = 'ceflpwtnrlzflnyx'; // app password
+
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port = 587;
+
+        $mail->setFrom('millionmikay@gmail.com', 'CampusConnect');
+        $mail->addAddress($data['email'], $data['full_name']);
+        $mail->isHTML(true);
+
+        if ($status === 'Rejected') {
+
+            // Reapply waiting period — adjust to match your org's actual policy
+            $reapplyDate = date('F j, Y', strtotime('+30 days'));
+
+            $mail->Subject = 'Application Update — ' . $data['org_name'];
+            $mail->Body = "
+                <h2>Application Update</h2>
+                <p>Hello {$data['full_name']},</p>
+                <p>Thank you for applying to <b>{$data['org_name']}</b> and for taking the time to go through the process.</p>
+                <p>After careful review, we're unable to move forward with your application at this time.</p>
+                <p>You're welcome to reapply starting <b>{$reapplyDate}</b>. We'd genuinely love to see another application from you then.</p>
+                <p>Thank you again for your interest in {$data['org_name']}.</p>
+                <p>— CampusConnect</p>
+            ";
+
+        } else { // Approved
+            $mail->Subject = 'Congratulations! Application Approved — ' . $data['org_name'];
+            $mail->Body = "
+                <h2>Congratulations!</h2>
+                <p>Hello {$data['full_name']},</p>
+                <p>We're happy to let you know your application to <b>{$data['org_name']}</b> has been approved.</p>
+                <p>Welcome aboard — you'll be contacted with next steps soon.</p>
+                <p>— CampusConnect</p>
+            ";
+        }
+
+        $mail->send();
+
+    } catch (Exception $e) {
+        error_log("Status update email failed for application $id: " . $mail->ErrorInfo);
+    }
 }
 
-sendMail($email, $name, $subject, $body);
-
-header("Location: dashboard.php?msg=Status updated and email sent");
+// ================= REDIRECT BACK TO WHEREVER THIS CAME FROM =================
+$referer = $_SERVER['HTTP_REFERER'] ?? 'applications.php';
+header("Location: " . $referer);
 exit();

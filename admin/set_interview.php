@@ -1,140 +1,143 @@
 <?php
-session_start();
+require 'auth.php'; // sets $conn, $scopedOrgId, $isSuperAdmin; redirects if not logged in as admin
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
 require '../vendor/autoload.php';
 
-// ✅ ADMIN CHECK
-if (!isset($_SESSION['user']) || $_SESSION['usertype'] !== 'admin') {
-    header("Location: ../login.php");
-    exit();
-}
-
-// ✅ DB CONNECT
-$conn = new mysqli("localhost", "root", "", "campusconnect");
-if ($conn->connect_error) die("DB Error");
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    $application_id = $_POST['application_id'] ?? 0;
-    $date = $_POST['interview_date'] ?? '';
-    $time = $_POST['interview_time'] ?? '';
-    $link = $_POST['interview_link'] ?? '';
+    $application_id      = intval($_POST['application_id'] ?? 0);
+    $interview_date       = $_POST['interview_date'] ?? '';
+    $interview_time       = $_POST['interview_time'] ?? '';
+    $interview_location   = $_POST['interview_location'] ?? '';
+    $interview_link       = $_POST['interview_link'] ?? '';
+    $interview_notes      = $_POST['interview_notes'] ?? '';
 
-    if ($application_id && $date && $time && $link) {
+    if (!$application_id || !$interview_date || !$interview_time) {
+        die("Missing data: interview date and time are required.");
+    }
 
-        $datetime = $date . " " . $time;
+    // RBAC CHECK: a scoped org admin can only schedule interviews for
+    // applications that belong to their own organization.
+    requireOrgAccessToApplication($conn, $application_id, $scopedOrgId, $isSuperAdmin);
 
-        // ================= SAVE TO DATABASE =================
-        $message = "Interview scheduled on $datetime. Join here: $link";
+    // Build a short human-readable notification message
+    if ($interview_link) {
+        $whereMsg = "Join here: $interview_link";
+    } elseif ($interview_location) {
+        $whereMsg = "Location: $interview_location";
+    } else {
+        $whereMsg = "Details to follow.";
+    }
+    $message = "Interview scheduled on $interview_date at $interview_time. $whereMsg";
 
-        $stmt = $conn->prepare("
-            UPDATE applications
-            SET
-                interview_date = ?,
-                interview_link = ?,
-                status = 'Interview',
-                notification = ?,
-                response = NULL,
-                responded_at = NULL
-            WHERE application_id = ?
+    // ================= SAVE TO DATABASE =================
+    
+    $stmt = $conn->prepare("
+        UPDATE applications
+        SET
+            interview_date = ?,
+            interview_time = ?,
+            interview_location = ?,
+            interview_link = ?,
+            interview_notes = ?,
+            status = 'Interview',
+            notification = ?,
+            response = NULL,
+            responded_at = NULL
+        WHERE application_id = ?
+    ");
+    $stmt->bind_param(
+        "ssssssi",
+        $interview_date,
+        $interview_time,
+        $interview_location,
+        $interview_link,
+        $interview_notes,
+        $message,
+        $application_id
+    );
+
+    if ($stmt->execute()) {
+
+        // ================= GET STUDENT INFO =================
+        $get = $conn->prepare("
+            SELECT s.email, s.full_name
+            FROM applications a
+            JOIN students s ON a.student_id = s.student_id
+            WHERE a.application_id = ?
         ");
+        $get->bind_param("i", $application_id);
+        $get->execute();
+        $data = $get->get_result()->fetch_assoc();
 
-        $stmt->bind_param("sssi", $datetime, $link, $message, $application_id);
+        if ($data) {
 
-        if ($stmt->execute()) {
+            $baseURL = "http://localhost/campus_connect/student/respond_interview.php";
+            $acceptLink  = $baseURL . "?id=$application_id&response=Accepted";
+            $declineLink = $baseURL . "?id=$application_id&response=Declined";
 
-            // ================= GET STUDENT INFO =================
-            $get = $conn->prepare("
-                SELECT s.email, s.full_name
-                FROM applications a
-                JOIN students s ON a.student_id = s.student_id
-                WHERE a.application_id = ?
-            ");
-            $get->bind_param("i", $application_id);
-            $get->execute();
-            $data = $get->get_result()->fetch_assoc();
+            $mail = new PHPMailer(true);
 
-            if ($data) {
+            try {
+                $mail->isSMTP();
+                $mail->Host = 'smtp.gmail.com';
+                $mail->SMTPAuth = true;
 
-                // ================= RESPONSE LINKS =================
-                $baseURL = "http://localhost/campus_connect/student/respond_interview.php";
+                $mail->Username = 'millionmikay@gmail.com';
+                $mail->Password = 'ceflpwtnrlzflnyx'; // app password
 
-                $acceptLink = $baseURL . "?id=$application_id&response=Accepted";
-                $declineLink = $baseURL . "?id=$application_id&response=Declined";
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+                $mail->Port = 587;
 
-                // ================= SEND EMAIL =================
-                $mail = new PHPMailer(true);
+                $mail->setFrom('millionmikay@gmail.com', 'CampusConnect');
+                $mail->addAddress($data['email'], $data['full_name']);
 
-                try {
-                    $mail->isSMTP();
-                    $mail->Host = 'smtp.gmail.com';
-                    $mail->SMTPAuth = true;
+                $mail->isHTML(true);
+                $mail->Subject = 'Interview Invitation';
 
-                    // ✅ YOUR WORKING GMAIL
-                    $mail->Username = 'millionmikay@gmail.com';
-                    $mail->Password = 'ceflpwtnrlzflnyx'; // app password
+                $linkHtml = $interview_link
+                    ? "<p><a href='{$interview_link}' target='_blank' style='background:#0a5c0a;color:white;padding:10px 15px;text-decoration:none;border-radius:5px;'>Join Meeting</a></p>"
+                    : "";
+                $locationHtml = $interview_location
+                    ? "<p><b>Location:</b> " . htmlspecialchars($interview_location) . "</p>"
+                    : "";
+                $notesHtml = $interview_notes
+                    ? "<p><b>Notes:</b> " . nl2br(htmlspecialchars($interview_notes)) . "</p>"
+                    : "";
 
-                    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-                    $mail->Port = 587;
+                $mail->Body = "
+                    <h2>Interview Invitation</h2>
+                    <p>Hello {$data['full_name']},</p>
+                    <p>Your interview has been scheduled.</p>
+                    <p><b>Date:</b> $interview_date</p>
+                    <p><b>Time:</b> $interview_time</p>
+                    $locationHtml
+                    $linkHtml
+                    $notesHtml
+                    <hr>
+                    <p><b>Respond:</b></p>
+                    <a href='{$acceptLink}' style='color:green;'> Accept Interview</a><br><br>
+                    <a href='{$declineLink}' style='color:red;'> Decline Interview</a>
+                ";
 
-                    $mail->setFrom('millionmikay@gmail.com', 'CampusConnect');
+                $mail->send();
 
-                    // ✅ SEND TO STUDENT (CHANGE AFTER TEST)
-                    $mail->addAddress($data['email'], $data['full_name']);
-                    // $mail->addAddress('millionmikay@gmail.com'); // test only
-
-                    $mail->isHTML(true);
-                    $mail->Subject = 'Interview Invitation';
-
-                    // ✅ FIXED HTML (NO BROKEN LINK)
-                    $mail->Body = "
-                        <h2>Interview Invitation</h2>
-                        <p>Hello {$data['full_name']},</p>
-
-                        <p>Your interview has been scheduled.</p>
-
-                        <p><b>Date & Time:</b> $datetime</p>
-
-                        <p>
-                            <a href='{$link}' target='_blank'
-                               style='background:#0a5c0a;color:white;padding:10px 15px;
-                               text-decoration:none;border-radius:5px;'>
-                               Join Meeting
-                            </a>
-                        </p>
-
-                        <hr>
-
-                        <p><b>Respond:</b></p>
-
-                        <a href='{$acceptLink}' style='color:green;'>✅ Accept Interview</a><br><br>
-                        <a href='{$declineLink}' style='color:red;'>❌ Decline Interview</a>
-                    ";
-
-                    // ❌ REMOVE DEBUG IN PRODUCTION
-                    // $mail->SMTPDebug = 2;
-
-                    if (!$mail->send()) {
-                        echo "❌ MAIL ERROR: " . $mail->ErrorInfo;
-                    } else {
-                        header("Location: dashboard.php?msg=Interview Scheduled & Email Sent!");
-                        exit();
-                    }
-
-                } catch (Exception $e) {
-                    echo "❌ EXCEPTION: {$mail->ErrorInfo}";
-                }
+            } catch (Exception $e) {
+                error_log("Interview email failed for application $application_id: " . $mail->ErrorInfo);
             }
-
-        } else {
-            echo "❌ DB Error: " . $stmt->error;
         }
 
+        header("Location: applications.php?msg=Interview Scheduled");
+        exit();
+
     } else {
-        echo "❌ Missing data.";
+        die("DB Error: " . $stmt->error);
     }
+
+} else {
+    header("Location: applications.php");
+    exit();
 }
-?>

@@ -12,7 +12,7 @@ if ($result && $result->num_rows > 0) {
 
     while($row = $result->fetch_assoc()) {
 
-        // ✅ SAFE VALUES (NO WARNINGS)
+        // SAFE VALUES (NO WARNINGS)
         $id      = $row['post_id'] ?? 0;
         $tag     = $row['tag'] ?? 'latest';
         $title   = $row['title'] ?? 'No Title';
@@ -28,7 +28,7 @@ if ($result && $result->num_rows > 0) {
             <h4>'.htmlspecialchars($title).'</h4>
             <p>'.nl2br(htmlspecialchars($content)).'</p>';
 
-        // ✅ IMAGE DISPLAY (SAFE)
+        // IMAGE DISPLAY (SAFE)
         if (!empty($image) && file_exists(__DIR__ . "/uploads/" . $image)) {
             echo '
             <img src="uploads/'.$image.'" alt="post image">

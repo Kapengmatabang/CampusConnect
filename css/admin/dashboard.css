@@ -1,0 +1,916 @@
+/* =========================================================
+   ADMIN DASHBOARD
+========================================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   THEME VARIABLES
+========================================================= */
+
+:root {
+
+    --bg-gradient-1: #0f172a;
+    --bg-gradient-2: #1e293b;
+
+    --text-main: #ffffff;
+    --text-secondary: #cccccc;
+
+    --sidebar-bg: rgba(255, 255, 255, 0.05);
+
+    --hover-bg: rgba(255, 255, 255, 0.15);
+    --hover-bg-soft: rgba(255, 255, 255, 0.05);
+
+    --panel-bg: rgba(255, 255, 255, 0.08);
+    --panel-border: rgba(255, 255, 255, 0.15);
+
+    --th-bg: rgba(255, 255, 255, 0.1);
+
+    --input-bg: #f1f5f9;
+    --input-text: #111827;
+
+    --modal-bg: #1e293b;
+    --modal-overlay: rgba(0, 0, 0, 0.6);
+
+    --img-box-bg: #000000;
+
+    --badge-bg: rgba(59, 130, 246, 0.15);
+    --badge-text: #3b82f6;
+}
+
+
+html.light {
+
+    --bg-gradient-1: #f3f4f6;
+    --bg-gradient-2: #ffffff;
+
+    --text-main: #111827;
+    --text-secondary: #6b7280;
+
+    --sidebar-bg: #ffffff;
+
+    --hover-bg: #f3f4f6;
+    --hover-bg-soft: #f9fafb;
+
+    --panel-bg: #ffffff;
+    --panel-border: #e5e7eb;
+
+    --th-bg: #f3f4f6;
+
+    --input-bg: #f9fafb;
+    --input-text: #111827;
+
+    --modal-bg: #ffffff;
+    --modal-overlay: rgba(0, 0, 0, 0.35);
+
+    --img-box-bg: #f3f4f6;
+}
+
+
+/* =========================================================
+   BODY
+========================================================= */
+
+body {
+
+    margin: 0;
+
+    font-family: 'Segoe UI', sans-serif;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--bg-gradient-1),
+            var(--bg-gradient-2)
+        );
+
+    color: var(--text-main);
+
+    display: flex;
+
+    min-height: 100vh;
+
+    transition:
+        background 0.3s ease,
+        color 0.3s ease;
+}
+
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+.sidebar {
+
+    width: 220px;
+
+    background: var(--sidebar-bg);
+
+    backdrop-filter: blur(12px);
+
+    padding: 20px;
+
+    height: 100vh;
+
+    position: sticky;
+
+    top: 0;
+
+    flex-shrink: 0;
+
+    transition:
+        background 0.3s ease;
+}
+
+
+.sidebar h2 {
+
+    margin-bottom: 5px;
+}
+
+
+.sidebar .role-label {
+
+    font-size: 11px;
+
+    color: var(--text-secondary);
+
+    margin-bottom: 15px;
+
+    display: block;
+}
+
+
+.sidebar a {
+
+    display: block;
+
+    padding: 10px;
+
+    border-radius: 8px;
+
+    margin-bottom: 10px;
+
+    color: var(--text-main);
+
+    text-decoration: none;
+
+    transition: 0.3s;
+
+    cursor: pointer;
+}
+
+
+.sidebar a:hover {
+
+    background: var(--hover-bg);
+}
+
+
+/* =========================================================
+   THEME TOGGLE
+========================================================= */
+
+.theme-toggle {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    background: var(--hover-bg-soft);
+
+    border: 1px solid var(--panel-border);
+
+    border-radius: 30px;
+
+    padding: 6px 10px;
+
+    margin-bottom: 20px;
+
+    cursor: pointer;
+
+    font-size: 13px;
+
+    color: var(--text-main);
+
+    transition: 0.3s;
+}
+
+
+.theme-toggle:hover {
+
+    background: var(--hover-bg);
+}
+
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+.main {
+
+    flex: 1;
+
+    padding: 25px;
+
+    min-width: 0;
+}
+
+
+.main > h2 {
+
+    margin-top: 0;
+}
+
+
+/* =========================================================
+   STATISTICS CARDS
+========================================================= */
+
+.cards {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 15px;
+}
+
+
+.card {
+
+    background: var(--panel-bg);
+
+    backdrop-filter: blur(12px);
+
+    border: 1px solid var(--panel-border);
+
+    padding: 20px;
+
+    border-radius: 15px;
+
+    text-align: center;
+
+    font-size: 18px;
+
+    color: var(--text-main);
+
+    transition: 0.3s;
+}
+
+
+.card:hover {
+
+    transform: translateY(-5px);
+}
+
+
+/* =========================================================
+   NOTIFICATION CARD
+========================================================= */
+
+.notification-card {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 16px;
+
+    margin-top: 20px;
+
+    padding: 18px 20px;
+
+    background: var(--panel-bg);
+
+    border: 1px solid var(--panel-border);
+
+    border-radius: 15px;
+
+    backdrop-filter: blur(10px);
+
+    transition: 0.3s;
+}
+
+
+.notification-card.has-new {
+
+    border-color:
+        rgba(59, 130, 246, 0.5);
+}
+
+
+.notif-icon {
+
+    font-size: 26px;
+
+    width: 48px;
+
+    height: 48px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background:
+        rgba(59, 130, 246, 0.15);
+
+    border-radius: 50%;
+
+    flex-shrink: 0;
+
+    position: relative;
+}
+
+
+.notif-badge {
+
+    position: absolute;
+
+    top: -4px;
+
+    right: -4px;
+
+    background: #ef4444;
+
+    color: white;
+
+    font-size: 11px;
+
+    font-weight: bold;
+
+    min-width: 18px;
+
+    height: 18px;
+
+    border-radius: 9px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 0 4px;
+}
+
+
+.notif-text {
+
+    flex: 1;
+}
+
+
+.notif-text strong {
+
+    display: block;
+
+    font-size: 15px;
+
+    margin-bottom: 2px;
+}
+
+
+.notif-text span {
+
+    font-size: 13px;
+
+    color: var(--text-secondary);
+}
+
+
+.view-application-btn {
+
+    padding: 9px 18px;
+
+    border-radius: 20px;
+
+    background: #3b82f6;
+
+    color: white;
+
+    text-decoration: none;
+
+    font-size: 13px;
+
+    font-weight: bold;
+
+    white-space: nowrap;
+
+    transition: 0.2s;
+}
+
+
+.view-application-btn:hover {
+
+    background: #2563eb;
+
+    transform: scale(1.03);
+}
+
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+button {
+
+    padding: 6px 12px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    color: white;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+
+    font-size: 13px;
+
+    font-family: inherit;
+}
+
+
+button:hover {
+
+    transform: scale(1.05);
+}
+
+
+.approve {
+
+    background: #22c55e;
+}
+
+
+.reject {
+
+    background: #ef4444;
+}
+
+
+.delete {
+
+    background: #ef4444;
+}
+
+
+.edit-btn {
+
+    background: #3b82f6;
+}
+
+
+/* =========================================================
+   POSTS
+========================================================= */
+
+.post-box {
+
+    background: var(--panel-bg);
+
+    border: 1px solid var(--panel-border);
+
+    padding: 15px;
+
+    border-radius: 15px;
+
+    margin-bottom: 15px;
+
+    backdrop-filter: blur(10px);
+
+    color: var(--text-main);
+
+    transition:
+        background 0.3s ease,
+        border-color 0.3s ease;
+}
+
+
+.post-box img {
+
+    width: 100%;
+
+    max-height: 400px;
+
+    object-fit: contain;
+
+    border-radius: 10px;
+
+    margin-top: 10px;
+}
+
+
+.post-box p {
+
+    line-height: 1.5;
+
+    white-space: normal;
+}
+
+
+/* =========================================================
+   SECTION HEADER
+========================================================= */
+
+.section-header {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-top: 35px;
+
+    margin-bottom: 12px;
+}
+
+
+.section-header h3 {
+
+    margin: 0;
+}
+
+
+.add-btn {
+
+    background: #22c55e;
+}
+
+
+/* =========================================================
+   ALERTS
+========================================================= */
+
+.alert {
+
+    padding: 10px 14px;
+
+    border-radius: 8px;
+
+    font-size: 13.5px;
+
+    margin-top: 16px;
+}
+
+
+.alert.success {
+
+    background:
+        rgba(34, 197, 94, 0.15);
+
+    color: #22c55e;
+}
+
+
+.alert.error {
+
+    background:
+        rgba(239, 68, 68, 0.15);
+
+    color: #ef4444;
+}
+
+
+/* =========================================================
+   ORGANIZATIONS GRID
+========================================================= */
+
+.org-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fill,
+            minmax(220px, 1fr)
+        );
+
+    gap: 15px;
+}
+
+
+.org-card {
+
+    background: var(--panel-bg);
+
+    border: 1px solid var(--panel-border);
+
+    padding: 14px;
+
+    border-radius: 14px;
+
+    backdrop-filter: blur(10px);
+
+    display: flex;
+
+    flex-direction: column;
+}
+
+
+.org-card .org-img-box {
+
+    width: 100%;
+
+    height: 90px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background: var(--img-box-bg);
+
+    border-radius: 8px;
+
+    overflow: hidden;
+
+    margin-bottom: 10px;
+}
+
+
+.org-card .org-img-box img {
+
+    max-width: 100%;
+
+    max-height: 100%;
+
+    object-fit: contain;
+}
+
+
+.org-card h4 {
+
+    margin: 0 0 4px;
+
+    font-size: 14.5px;
+}
+
+
+.org-card .badge {
+
+    display: inline-block;
+
+    font-size: 10.5px;
+
+    padding: 2px 9px;
+
+    border-radius: 20px;
+
+    background: var(--badge-bg);
+
+    color: var(--badge-text);
+
+    font-weight: bold;
+
+    margin-bottom: 8px;
+
+    width: fit-content;
+}
+
+
+.org-card p.org-desc {
+
+    font-size: 12px;
+
+    color: var(--text-secondary);
+
+    margin: 0 0 10px;
+
+    flex: 1;
+
+    line-height: 1.4;
+}
+
+
+.org-card .org-fb-link {
+
+    font-size: 11.5px;
+
+    color: #3b82f6;
+
+    text-decoration: none;
+
+    margin: -4px 0 10px;
+
+    display: inline-block;
+}
+
+
+.org-card .org-fb-link:hover {
+
+    text-decoration: underline;
+}
+
+
+.org-card .edit-btn {
+
+    width: 100%;
+}
+
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+.modal {
+
+    display: none;
+
+    position: fixed;
+
+    z-index: 1000;
+
+    top: 0;
+
+    left: 0;
+
+    width: 100%;
+
+    height: 100%;
+
+    background: var(--modal-overlay);
+
+    overflow-y: auto;
+}
+
+
+.modal-content {
+
+    background: var(--modal-bg);
+
+    color: var(--text-main);
+
+    padding: 20px;
+
+    border-radius: 15px;
+
+    width: 380px;
+
+    max-width: 90vw;
+
+    margin: 60px auto;
+
+    transition:
+        background 0.3s ease,
+        color 0.3s ease;
+}
+
+
+/* =========================================================
+   MODAL FORM
+========================================================= */
+
+.modal input,
+.modal textarea,
+.modal select {
+
+    width: 100%;
+
+    padding: 8px;
+
+    margin: 8px 0;
+
+    border-radius: 8px;
+
+    border: none;
+
+    background: var(--input-bg);
+
+    color: var(--input-text);
+
+    font-family: inherit;
+
+    outline: none;
+}
+
+
+.modal label.field-label {
+
+    display: block;
+
+    font-size: 12px;
+
+    color: var(--text-secondary);
+
+    margin-top: 10px;
+}
+
+
+.modal label.field-label:first-of-type {
+
+    margin-top: 0;
+}
+
+
+.modal textarea {
+
+    min-height: 60px;
+
+    resize: vertical;
+}
+
+
+.modal .current-image {
+
+    font-size: 11.5px;
+
+    color: var(--text-secondary);
+
+    margin-top: -4px;
+
+    margin-bottom: 6px;
+}
+
+
+.optional-label {
+
+    font-weight: normal;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 900px) {
+
+    .cards {
+
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+}
+
+
+@media (max-width: 700px) {
+
+    body {
+
+        display: block;
+    }
+
+
+    .sidebar {
+
+        width: 100%;
+
+        height: auto;
+
+        position: relative;
+    }
+
+
+    .main {
+
+        padding: 15px;
+    }
+
+
+    .cards {
+
+        grid-template-columns: 1fr;
+    }
+
+
+    .notification-card {
+
+        flex-wrap: wrap;
+    }
+
+
+    .view-application-btn {
+
+        width: 100%;
+
+        text-align: center;
+    }
+
+
+    .org-grid {
+
+        grid-template-columns: 1fr;
+    }
+
+
+    .modal-content {
+
+        width: 95%;
+
+        margin: 30px auto;
+    }
+
+}
