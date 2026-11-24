@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-$conn = new mysqli("localhost", "root", "", "campusconnect");
+require __DIR__ . '/../db.php';
 
 $student_id = $_SESSION["user"];
 

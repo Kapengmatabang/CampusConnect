@@ -22,7 +22,7 @@ header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Pragma: no-cache");
 
 // DATABASE (same settings as login.php)
-$conn = new mysqli("localhost", "root", "", "campusconnect");
+require __DIR__ . '/db.php';
 $conn->set_charset("utf8mb4");
 
 $error = "";

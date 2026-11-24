@@ -10,7 +10,7 @@ if (!isset($_SESSION["user"]) || $_SESSION["usertype"] !== "student") {
     exit();
 }
 $student_id = $_SESSION["user"];
-$conn = new mysqli("localhost", "root", "", "campusconnect");
+require __DIR__ . '/../db.php';
 if ($conn->connect_error) {
     die("DB Error");
 }

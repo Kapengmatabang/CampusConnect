@@ -11,7 +11,7 @@ header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Pragma: no-cache");
 
 // DATABASE
-$conn = new mysqli("localhost", "root", "", "campusconnect");
+require __DIR__ . '/db.php';
 if ($conn->connect_error) die("DB failed");
 $error = "";
 $submitted = false;

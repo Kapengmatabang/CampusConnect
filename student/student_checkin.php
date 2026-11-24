@@ -17,7 +17,7 @@ $student_id = $_SESSION["user"];
    DATABASE CONNECTION
    ========================================================= */
 
-$conn = new mysqli("localhost", "root", "", "campusconnect");
+require __DIR__ . '/../db.php';
 
 if ($conn->connect_error) {
     die("DB Error");

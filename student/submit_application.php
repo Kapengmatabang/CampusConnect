@@ -39,7 +39,7 @@ if (empty($_POST) && empty($_FILES) && !empty($_SERVER['CONTENT_LENGTH'])) {
 }
 
 // ================= DATABASE =================
-$conn = new mysqli("localhost", "root", "", "campusconnect");
+require __DIR__ . '/../db.php';
 if ($conn->connect_error) {
     die("DB Error: " . htmlspecialchars($conn->connect_error));
 }

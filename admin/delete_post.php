@@ -1,5 +1,5 @@
 <?php
-$conn = new mysqli("localhost", "root", "", "campusconnect");
+require __DIR__ . '/../db.php';
 
 $id = $_POST['id'] ?? 0;
 

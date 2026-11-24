@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-$conn = new mysqli("localhost", "root", "", "campusconnect");
+require __DIR__ . '/../db.php';
 if ($conn->connect_error) die("DB Error");
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

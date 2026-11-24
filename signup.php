@@ -3,7 +3,7 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 session_start();
 
-$database = new mysqli("localhost", "root", "", "campusconnect");
+require __DIR__ . '/connection.php';
 
 if ($database->connect_error) {
     die("Database connection failed: " . $database->connect_error);
