@@ -1,0 +1,436 @@
+/* APPLICATIONS ADMIN CSS */
+* {
+    box-sizing: border-box;
+}
+
+/* THEME VARIABLES */
+:root {
+    --bg-gradient-1: #0f172a;
+    --bg-gradient-2: #1e293b;
+
+    --text-main: #ffffff;
+    --text-secondary: #cccccc;
+
+    --sidebar-bg: rgba(255, 255, 255, 0.05);
+
+    --hover-bg: rgba(255, 255, 255, 0.15);
+    --hover-bg-soft: rgba(255, 255, 255, 0.05);
+
+    --panel-bg: rgba(255, 255, 255, 0.08);
+    --panel-border: rgba(255, 255, 255, 0.15);
+
+    --th-bg: rgba(255, 255, 255, 0.10);
+
+    --input-bg: #f1f5f9;
+    --input-text: #111827;
+
+    --modal-bg: #1e293b;
+    --modal-overlay: rgba(0, 0, 0, 0.60);
+}
+
+html.light {
+
+    --bg-gradient-1: #f3f4f6;
+    --bg-gradient-2: #ffffff;
+
+    --text-main: #111827;
+    --text-secondary: #6b7280;
+
+    --sidebar-bg: #ffffff;
+
+    --hover-bg: #f3f4f6;
+    --hover-bg-soft: #f9fafb;
+
+    --panel-bg: #ffffff;
+    --panel-border: #e5e7eb;
+
+    --th-bg: #f3f4f6;
+
+    --input-bg: #f9fafb;
+    --input-text: #111827;
+
+    --modal-bg: #ffffff;
+    --modal-overlay: rgba(0, 0, 0, 0.35);
+}
+
+/* BODY */
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background:
+        linear-gradient(
+            135deg,
+            var(--bg-gradient-1),
+            var(--bg-gradient-2)
+        );
+    color: var(--text-main);
+    display: flex;
+    min-height: 100vh;
+    transition:
+        background 0.3s ease,
+        color 0.3s ease;
+}
+
+/* SIDEBAR */
+
+.sidebar {
+    width: 220px;
+    background: var(--sidebar-bg);
+    backdrop-filter: blur(12px);
+    padding: 20px;
+    height: 100vh;
+    position: sticky;
+    top: 0;
+    transition:
+        background 0.3s ease;
+    flex-shrink: 0;
+}
+
+.sidebar h2 {
+    margin-bottom: 5px;
+}
+
+.sidebar .org-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 15px;
+    display: block;
+}
+
+.sidebar a {
+    display: block;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    color: var(--text-main);
+    text-decoration: none;
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.sidebar a:hover {
+    background: var(--hover-bg);
+}
+
+
+/* THEME TOGGLE */
+
+.theme-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--hover-bg-soft);
+    border: 1px solid var(--panel-border);
+    border-radius: 30px;
+    padding: 6px 10px;
+    margin-bottom: 20px;
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--text-main);
+    transition: 0.3s;
+}
+
+.theme-toggle:hover {
+    background: var(--hover-bg);
+}
+
+/* MAIN */
+.main {
+    flex: 1;
+    padding: 25px;
+    min-width: 0;
+    overflow-x: auto;
+}
+
+.main h2 {
+    margin-top: 0;
+}
+
+.page-description {
+    color: var(--text-secondary);
+    margin-top: -8px;
+    margin-bottom: 25px;
+}
+
+/* COURSE SECTION */
+.course-section {
+    margin-bottom: 35px;
+}
+
+.course-heading {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.course-heading h3 {
+    margin: 0;
+    color: var(--text-main);
+}
+
+.course-count {
+    background: var(--panel-bg);
+    border: 1px solid var(--panel-border);
+    color: var(--text-secondary);
+    font-size: 12px;
+    padding: 3px 10px;
+    border-radius: 20px;
+}
+
+/* TABLE */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--panel-bg);
+    backdrop-filter: blur(10px);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+th,
+td {
+    padding: 10px;
+    text-align: center;
+    color: var(--text-main);
+}
+
+th {
+    background: var(--th-bg);
+    font-size: 13px;
+}
+
+td {
+    font-size: 13px;
+}
+
+tr:hover {
+    background: var(--hover-bg-soft);
+}
+
+/* BUTTONS */
+
+button {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    transition: 0.2s;
+    font-size: 13px;
+    font-family: inherit;
+}
+
+button:hover {
+    transform: scale(1.05);
+}
+
+.reject {
+    background: #ef4444;
+}
+
+.btn-interview {
+    background: #3b82f6;
+}
+
+.view-btn {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 8px;
+    background: #8b5cf6;
+    color: white;
+    text-decoration: none;
+    font-size: 13px;
+    white-space: nowrap;
+    min-width: 80px;
+    transition: 0.2s;
+}
+
+.view-btn:hover {
+    transform: scale(1.05);
+}
+
+.no-file {
+    font-size: 12px;
+    color: var(--text-secondary);
+    min-width: 80px;
+    display: inline-block;
+}
+
+/* EMPTY STATE */
+.empty-state {
+    text-align: center;
+    padding: 40px;
+    color: var(--text-secondary);
+    background: var(--panel-bg);
+    border-radius: 15px;
+}
+
+
+/* ACTION BUTTON GROUP */
+.actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    align-items: center;
+}
+
+.actions form {
+    margin: 0;
+    display: inline-flex;
+}
+
+.actions button {
+    white-space: nowrap;
+    min-width: 80px;
+}
+
+/* MODAL*/
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--modal-overlay);
+    overflow-y: auto;
+}
+
+.modal-content {
+    background: var(--modal-bg);
+    color: var(--text-main);
+    padding: 20px;
+    border-radius: 15px;
+    width: 350px;
+    max-width: 90vw;
+    margin: 80px auto;
+    transition:
+        background 0.3s ease,
+        color 0.3s ease;
+}
+
+
+/* MODAL INPUTS */
+.modal input,
+.modal textarea,
+.modal select {
+    width: 100%;
+    padding: 8px;
+    margin: 8px 0;
+    border-radius: 8px;
+    border: none;
+    background: var(--input-bg);
+    color: var(--input-text);
+    font-family: inherit;
+    outline: none;
+}
+
+.modal textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+/* FILE PREVIEW MODAL */
+#fileModal .file-modal-content {
+    width: 600px;
+    max-width: 90vw;
+    margin: 40px auto;
+    text-align: left;
+}
+
+#filePreviewFrame {
+    width: 100%;
+    height: 65vh;
+    border: none;
+    border-radius: 10px;
+    background: white;
+    display: none;
+}
+
+/* UNSUPPORTED FILE MESSAGE */
+.file-preview-unsupported {
+    display: none;
+    padding: 40px 20px;
+    text-align: center;
+    color: var(--text-secondary);
+    background: var(--input-bg);
+    border-radius: 10px;
+}
+
+/* FILE MODAL HEADER */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.modal-header h3 {
+    margin: 0;
+}
+
+/* FILE LINKS */
+.file-links {
+    margin-top: 10px;
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.file-links a {
+    text-decoration: none;
+    font-size: 13px;
+}
+
+#fileOpenNewTab {
+    color: #3b82f6;
+}
+
+#fileDownloadLink {
+    color: #22c55e;
+    font-weight: bold;
+}
+
+/* MODAL ACTIONS */
+.modal-actions {
+    margin-top: 15px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+    .sidebar {
+        width: 190px;
+        padding: 15px;
+    }
+    .main {
+        padding: 20px;
+    }
+    table {
+        min-width: 750px;
+    }
+}
+
+@media (max-width: 700px) {
+    body {
+        display: block;
+    }
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+    }
+    .main {
+        padding: 15px;
+    }
+    .modal-content {
+        width: 95%;
+        margin: 30px auto;
+    }
+    #fileModal .file-modal-content {
+        width: 95%;
+        margin: 20px auto;
+    }
+}

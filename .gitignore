@@ -1,0 +1,8 @@
+.env
+mail_log.txt
+*.log
+*.sql
+uploads/*
+!uploads/.gitkeep
+ca.pem
+.vscode/
