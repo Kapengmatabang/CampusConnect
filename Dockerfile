@@ -6,7 +6,7 @@ RUN docker-php-ext-install mysqli pdo pdo_mysql
 
 # Enable Apache URL rewriting
 RUN a2enmod rewrite speling
-RUN printf '<Directory /var/www/html>\n    CheckSpelling On\n    CheckCaseOnly On\n</Directory>\n' > /etc/apache2/conf-available/speling.conf && a2enconf speling
+RUN printf 'ServerName https://campusconnect-ry2l.onrender.com\nUseCanonicalName On\n<Directory /var/www/html>\n    CheckSpelling On\n    CheckCaseOnly On\n</Directory>\n' > /etc/apache2/conf-available/speling.conf && a2enconf speling
 
 # Copy CampusConnect files
 COPY . /var/www/html/
