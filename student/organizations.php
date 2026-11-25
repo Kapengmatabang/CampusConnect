@@ -103,8 +103,47 @@ while ($row = $r->fetch_assoc()) {
 }
 
 // ORGANIZATION IMAGE
+// - Converts backslashes to forward slashes
+// - Fixes extension case (.JPG vs .jpg) by checking the real file on disk
+//   (Windows ignores case, Render/Linux does not)
+// - URL-encodes spaces and special characters in each path segment
 function img($o) {
-    return !empty($o['image']) ? "../" . $o['image'] : "../img/default.png";
+    $path = trim(str_replace('\\', '/', (string)($o['image'] ?? '')));
+
+    if ($path === '') {
+        return "../img/default.png";
+    }
+
+    // Already a full URL (e.g. Cloudinary)
+    if (preg_match('#^https?://#i', $path)) {
+        return $path;
+    }
+
+    $path = ltrim($path, '/');
+    $root = dirname(__DIR__); // project root
+
+    // If the exact file doesn't exist, try other extension cases
+    if (!file_exists($root . '/' . $path)) {
+        $info = pathinfo($path);
+        if (!empty($info['extension'])) {
+            $dir  = ($info['dirname'] === '.') ? '' : $info['dirname'] . '/';
+            $name = $info['filename'];
+            $ext  = $info['extension'];
+
+            foreach ([strtolower($ext), strtoupper($ext)] as $tryExt) {
+                $candidate = $dir . $name . '.' . $tryExt;
+                if (file_exists($root . '/' . $candidate)) {
+                    $path = $candidate;
+                    break;
+                }
+            }
+        }
+    }
+
+    // Encode each segment (keeps the slashes, encodes spaces/commas)
+    $encoded = implode('/', array_map('rawurlencode', explode('/', $path)));
+
+    return "../" . $encoded;
 }
 
 // APPLICATION STATUS
