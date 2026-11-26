@@ -117,17 +117,126 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+<meta charset="UTF-8">
+
+<!-- REQUIRED for mobile: without this, phones render the page at desktop width and shrink it -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Sign Up</title>
 <link rel="icon" type="image/png" href="img/favicon.png">
 
 <link rel="stylesheet" href="css/signup.css">
+
+<!-- MOBILE SIZE OVERRIDES (loaded after signup.css so they win) -->
+<style>
+@media (max-width: 600px) {
+
+    html, body {
+        min-height: 100vh;
+    }
+
+    body {
+        padding: 70px 16px 30px !important;
+        box-sizing: border-box;
+        display: block !important;
+    }
+
+    .back-btn {
+        font-size: 16px !important;
+        padding: 10px 14px !important;
+    }
+
+    .back-btn svg {
+        width: 20px !important;
+        height: 20px !important;
+    }
+
+    .container {
+        width: 100% !important;
+        max-width: 480px !important;
+        margin: 0 auto !important;
+        padding: 28px 20px !important;
+        box-sizing: border-box;
+        border-radius: 18px !important;
+    }
+
+    .container h2 {
+        font-size: 28px !important;
+        margin-bottom: 20px !important;
+    }
+
+    .input {
+        width: 100% !important;
+        font-size: 16px !important;      /* 16px also stops iOS zoom-on-tap */
+        padding: 15px 14px !important;
+        margin-bottom: 14px !important;
+        box-sizing: border-box;
+        border-radius: 12px !important;
+    }
+
+    .hint {
+        font-size: 13px !important;
+        margin: -8px 0 14px !important;
+    }
+
+    /* Course on its own line, Year + Section side by side below it */
+    .course-row {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 12px !important;
+    }
+
+    .course-row .course-field {
+        flex: 1 1 100% !important;
+        margin-bottom: 0 !important;
+    }
+
+    .course-row .year-field,
+    .course-row .section-field {
+        flex: 1 1 calc(50% - 6px) !important;
+        margin-bottom: 0 !important;
+    }
+
+    .course-row + .hint {
+        margin-top: 8px !important;
+    }
+
+    .btn {
+        width: 100% !important;
+        font-size: 18px !important;
+        padding: 16px !important;
+        border-radius: 12px !important;
+    }
+
+    .login-link {
+        font-size: 15px !important;
+        margin-top: 18px !important;
+    }
+
+    .switch-btn {
+        font-size: 15px !important;
+        padding: 14px !important;
+        border-radius: 12px !important;
+    }
+
+    .switch-btn svg {
+        width: 20px !important;
+        height: 20px !important;
+    }
+
+    .error {
+        font-size: 15px !important;
+        padding: 12px 14px !important;
+    }
+}
+</style>
 </head>
 
 <body>
 
-<a href="index.html" class="back-btn">
+<a href="index.html" class="back-btn" id="backBtn">
     <svg viewBox="0 0 24 24">
         <path d="M15 18l-6-6 6-6"
               stroke-linecap="round"
@@ -149,8 +258,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 <input type="text" name="fullname" placeholder="Full Name" class="input" value="<?= htmlspecialchars($old['fullname']) ?>" required>
 <input type="email" name="email" placeholder="Email" class="input" value="<?= htmlspecialchars($old['email']) ?>" required>
-<div class="hint">Use your Institional Email</div>
-<input type="text" name="student_id" placeholder="Student ID (8 digits)" class="input" value="<?= htmlspecialchars($old['student_id']) ?>" required>
+<div class="hint">Use your Institutional Email</div>
+<input type="text" name="student_id" placeholder="Student ID (8 digits)" class="input" inputmode="numeric" maxlength="8" value="<?= htmlspecialchars($old['student_id']) ?>" required>
 
 <div class="course-row">
     <input type="text" name="course" placeholder="Course (e.g. BSIT)" class="input course-field" value="<?= htmlspecialchars($old['course']) ?>" required>
@@ -169,9 +278,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <?php endfor; ?>
     </select>
 </div>
-<div class="hint">Course</div>
+<div class="hint">Course, Year and Section</div>
 
-<input type="number" name="age" placeholder="Age" class="input" value="<?= htmlspecialchars($old['age']) ?>" required>
+<input type="number" name="age" placeholder="Age" class="input" inputmode="numeric" value="<?= htmlspecialchars($old['age']) ?>" required>
 <input type="password" name="password" placeholder="Password" class="input" required>
 
 <button class="btn">Sign Up</button>
@@ -193,14 +302,17 @@ Already have an account? <a href="login.php">Login</a>
 </div>
 
 <script>
-document.getElementById("backBtn").addEventListener("click", function(e) {
-    e.preventDefault();
-    if (document.referrer && document.referrer.indexOf(window.location.host) !== -1) {
-        window.history.back();
-    } else {
-        window.location.href = "index.html";
-    }
-});
+var backBtn = document.getElementById("backBtn");
+if (backBtn) {
+    backBtn.addEventListener("click", function(e) {
+        e.preventDefault();
+        if (document.referrer && document.referrer.indexOf(window.location.host) !== -1) {
+            window.history.back();
+        } else {
+            window.location.href = "index.html";
+        }
+    });
+}
 </script>
 
 </body>
