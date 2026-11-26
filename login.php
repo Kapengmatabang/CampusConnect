@@ -113,12 +113,131 @@ if (empty($error) && isset($_SESSION['login_error'])) {
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+<meta charset="UTF-8">
+
+<!-- REQUIRED for mobile: without this, phones render the page at desktop width and shrink it -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Login</title>
 <link rel="icon" type="image/png" href="img/favicon.png">
 
 <link rel="stylesheet" href="css/login.css">
+
+<!-- MOBILE SIZE OVERRIDES (loaded after login.css so they win) -->
+<style>
+@media (max-width: 600px) {
+
+    html, body {
+        min-height: 100vh;
+    }
+
+    body {
+        padding: 70px 16px 30px !important;
+        box-sizing: border-box;
+        display: block !important;
+    }
+
+    .back-btn {
+        font-size: 16px !important;
+        padding: 10px 14px !important;
+    }
+
+    .back-btn svg {
+        width: 20px !important;
+        height: 20px !important;
+    }
+
+    .logo {
+        display: block !important;
+        width: 110px !important;
+        max-width: 40% !important;
+        height: auto !important;
+        margin: 0 auto 16px !important;
+    }
+
+    .container {
+        width: 100% !important;
+        max-width: 480px !important;
+        margin: 0 auto !important;
+        padding: 28px 20px !important;
+        box-sizing: border-box;
+        border-radius: 18px !important;
+    }
+
+    .container h2 {
+        font-size: 28px !important;
+        margin-bottom: 6px !important;
+    }
+
+    .container .sub {
+        font-size: 16px !important;
+        margin-bottom: 20px !important;
+    }
+
+    .alert {
+        font-size: 15px !important;
+        padding: 12px 14px !important;
+    }
+
+    /* Student / Admin switch */
+    .login-mode-switch {
+        width: 100% !important;
+        box-sizing: border-box;
+    }
+
+    .login-mode-switch button {
+        font-size: 16px !important;
+        padding: 13px 10px !important;
+    }
+
+    .login-mode-switch button svg {
+        width: 20px !important;
+        height: 20px !important;
+    }
+
+    .input-group {
+        margin-bottom: 14px !important;
+    }
+
+    .input-group input,
+    input[type="text"],
+    input[type="password"] {
+        width: 100% !important;
+        font-size: 16px !important;      /* 16px also stops iOS zoom-on-tap */
+        padding: 15px 14px !important;
+        box-sizing: border-box;
+        border-radius: 12px !important;
+    }
+
+    .show-pass {
+        font-size: 15px !important;
+        margin-bottom: 18px !important;
+    }
+
+    .show-pass input[type="checkbox"] {
+        width: 18px !important;
+        height: 18px !important;
+        padding: 0 !important;
+        vertical-align: middle;
+        margin-right: 6px;
+    }
+
+    .login-btn {
+        width: 100% !important;
+        font-size: 18px !important;
+        padding: 16px !important;
+        border-radius: 12px !important;
+    }
+
+    #signupLine,
+    #adminSignupLine {
+        font-size: 15px !important;
+        margin-top: 18px !important;
+    }
+}
+</style>
 </head>
 
 <body>
@@ -131,7 +250,7 @@ if (empty($error) && isset($_SESSION['login_error'])) {
 </a>
 
 <a href="index.html">
-<img src="img/cclogo.png" class="logo">
+<img src="img/cclogo.png" class="logo" alt="Campus Connect">
 </a>
 
 <div class="container">
@@ -172,7 +291,7 @@ Account created successfully!
 <input type="password" id="password" name="userpassword" placeholder="Password" required>
 </div>
 
-<div style="font-size:12px; margin-bottom:15px;">
+<div class="show-pass" style="font-size:12px; margin-bottom:15px;">
 <input type="checkbox" onclick="togglePassword()"> Show Password
 </div>
 
