@@ -39,6 +39,20 @@ $user = $stmt->get_result()->fetch_assoc();
         href="../css/student/dashboard.css"
     >
 
+    <style>
+    /* ---------- HAMBURGER MENU: hidden on desktop ---------- */
+    .menu-btn,
+    .nav-overlay,
+    .nav-close {
+        display: none;
+    }
+
+    /* On desktop the wrapper is invisible, so the sidebar looks exactly as before */
+    .nav-links {
+        display: contents;
+    }
+    </style>
+
     <!-- MOBILE LAYOUT (loaded after dashboard.css so it wins) -->
     <style>
     @media (max-width: 768px) {
@@ -61,20 +75,26 @@ $user = $stmt->get_result()->fetch_assoc();
             box-sizing: border-box;
             padding: 16px !important;
             display: flex !important;
-            flex-wrap: wrap;
+            flex-wrap: nowrap;
             align-items: center;
             gap: 10px;
+            /* these would trap the fixed drawer inside the top bar */
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            transform: none !important;
+            filter: none !important;
         }
 
         .sidebar h2 {
+            order: 1;
             flex: 1 1 auto;
             margin: 0 !important;
             font-size: 22px !important;
         }
 
         .theme-toggle {
-            flex: 0 0 auto;
             order: 2;
+            flex: 0 0 auto;
             font-size: 14px !important;
             padding: 10px 14px !important;
             margin: 0 !important;
@@ -84,15 +104,106 @@ $user = $stmt->get_result()->fetch_assoc();
             display: none;
         }
 
-        .sidebar a {
-            flex: 1 1 calc(33.333% - 10px);
-            text-align: center;
-            font-size: 15px !important;
-            padding: 12px 8px !important;
+        /* HAMBURGER BUTTON (3 lines) */
+        .menu-btn {
+            order: 3;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px;
+            flex: 0 0 auto;
+            width: 44px;
+            height: 44px;
+            padding: 0 11px;
+            box-sizing: border-box;
+            background: rgba(148, 163, 184, 0.15);
+            border: 1px solid rgba(148, 163, 184, 0.3);
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .menu-btn span {
+            display: block;
+            height: 3px;
+            width: 100%;
+            background: currentColor;
+            color: #e2e8f0;
+            border-radius: 2px;
+            transition: transform 0.25s, opacity 0.25s;
+        }
+
+        html.light .menu-btn span {
+            color: #1e293b;
+        }
+
+        /* SLIDE-IN DRAWER */
+        .nav-links {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 75%;
+            max-width: 280px;
+            box-sizing: border-box;
+            padding: 20px 16px;
+            background: #0f172a;
+            box-shadow: 4px 0 24px rgba(0, 0, 0, 0.5);
+            transform: translateX(-105%);
+            transition: transform 0.28s ease;
+            z-index: 1001;
+            overflow-y: auto;
+        }
+
+        html.light .nav-links {
+            background: #ffffff;
+        }
+
+        .nav-links.open {
+            transform: translateX(0);
+        }
+
+        .nav-close {
+            display: block;
+            align-self: flex-end;
+            background: none;
+            border: none;
+            font-size: 28px;
+            line-height: 1;
+            color: inherit;
+            cursor: pointer;
+            padding: 4px 8px;
+            margin-bottom: 8px;
+        }
+
+        .sidebar .nav-links a {
+            flex: 0 0 auto;
+            display: block;
+            text-align: left;
+            font-size: 17px !important;
+            padding: 14px 16px !important;
             margin: 0 !important;
             border-radius: 10px;
             box-sizing: border-box;
-            order: 3;
+            order: 0;
+        }
+
+        .nav-overlay {
+            display: block;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.55);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.28s;
+            z-index: 1000;
+        }
+
+        .nav-overlay.show {
+            opacity: 1;
+            pointer-events: auto;
         }
 
         /* MAIN CONTENT */
@@ -182,7 +293,7 @@ $user = $stmt->get_result()->fetch_assoc();
 </head>
 
 <body>
-<!-- SIDEBAR -->
+<!-- SIDEBAR / TOP BAR -->
 <div class="sidebar">
     <h2>Student</h2>
     <div
@@ -203,16 +314,41 @@ $user = $stmt->get_result()->fetch_assoc();
             Tap to switch
         </span>
     </div>
-    <a href="student_checkin.php">
-        Wellness
-    </a>
-    <a href="organizations.php">
-        Explore Orgs
-    </a>
-    <a href="../logout.php">
-        Logout
-    </a>
+
+    <!-- 3-LINE MENU BUTTON (mobile only) -->
+    <button
+        class="menu-btn"
+        id="menuBtn"
+        type="button"
+        aria-label="Open menu"
+        aria-expanded="false"
+    >
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <!-- LINKS (drawer on mobile, normal sidebar links on desktop) -->
+    <div class="nav-links" id="navLinks">
+        <button
+            class="nav-close"
+            id="navClose"
+            type="button"
+            aria-label="Close menu"
+        >&times;</button>
+        <a href="student_checkin.php">
+            Wellness
+        </a>
+        <a href="organizations.php">
+            Explore Orgs
+        </a>
+        <a href="../logout.php">
+            Logout
+        </a>
+    </div>
 </div>
+
+<div class="nav-overlay" id="navOverlay"></div>
 
 <!-- MAIN -->
 <div class="main">
@@ -309,6 +445,35 @@ themeToggle.addEventListener("click", () => {
         "cc_theme",
         newTheme
     );
+});
+
+// ============ HAMBURGER MENU ============
+
+const menuBtn = document.getElementById("menuBtn");
+const navLinks = document.getElementById("navLinks");
+const navOverlay = document.getElementById("navOverlay");
+const navClose = document.getElementById("navClose");
+
+function openMenu() {
+    navLinks.classList.add("open");
+    navOverlay.classList.add("show");
+    menuBtn.setAttribute("aria-expanded", "true");
+}
+
+function closeMenu() {
+    navLinks.classList.remove("open");
+    navOverlay.classList.remove("show");
+    menuBtn.setAttribute("aria-expanded", "false");
+}
+
+menuBtn.addEventListener("click", openMenu);
+navClose.addEventListener("click", closeMenu);
+navOverlay.addEventListener("click", closeMenu);
+navLinks.querySelectorAll("a").forEach(a =>
+    a.addEventListener("click", closeMenu)
+);
+document.addEventListener("keydown", e => {
+    if (e.key === "Escape") closeMenu();
 });
 
 // ======= LOAD APPLICATIONS ========
